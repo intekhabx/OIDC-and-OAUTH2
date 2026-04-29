@@ -14,7 +14,7 @@ function createApplication(){
 
 
   // routes
-  app.use('/api/route', authRoute);
+  app.use('/api/auth', authRoute);
   
   app.get('/health', (req, res)=>{
     res.status(200).send({ok: true})

@@ -39,7 +39,7 @@ export const logout = asyncHandler(async (req, res)=>{
 
 
 export const renewToken = asyncHandler(async (req, res)=>{
-  const {accessToken, refreshToken} = await renewToken(req.cookies?.refreshToken);
+  const {accessToken, refreshToken} = await authService.renewToken(req.cookies?.refreshToken);
 
   // send newRefreshToken in cookie and newAccessToken as response
   res.cookie("refreshToken", refreshToken, {

@@ -20,7 +20,7 @@ export const isLoggedIn = asyncHandler(async (req, res, next)=>{
 
   // step:2 - verify the token and find user with decoded value
   const decoded = verifyAccessToken(token);
-  const user = await userModel.findById(decoded.id);
+  const user = await userModel.findById(decoded.sub);
   if(!user) throw ApiError.unAuthorized("invalid access token");
 
   // step:3 - now user is authenticated, attach user details on req.user

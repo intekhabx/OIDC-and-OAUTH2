@@ -1,7 +1,8 @@
+import crypto from 'crypto';
 import ApiError from '../../common/utils/api-error.utils.js';
 import { buildAccessTokenPayload } from '../../common/utils/constants.utils.js';
 import userModel from './auth.model.js';
-import {generateAccessToken, generateRefreshToken, verifyRefreshToken} from '../../common/utils/jwt.utils.js'
+import {generateAccessToken, generateRefreshToken, verifyRefreshToken} from '../../common/utils/jwt.utils.js';
 
 
 
@@ -42,10 +43,10 @@ export const register = async ({name, email, username, password})=>{
 }
 
 
-export const login = async ({username, email, password}) =>{
+export const login = async ({identifier, password}) =>{
   try {
-    // step:1 - find user exists or not with password and refershToken;
-    const user = await userModel.findOne({$or: [{email: email}, {username: username}]}).select("+password +refreshToken");
+    // step:1 - find user exists or not with password and refershToken && user send only username or email and password;
+    const user = await userModel.findOne({$or: [{email: identifier}, {username: identifier}]}).select("+password +refreshToken");
     if(!user){
       throw ApiError.unAuthorized("invalid user credintials");
     }
