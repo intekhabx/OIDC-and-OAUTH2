@@ -1,5 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import authRoute from './module/auth/auth.route.js';
 
 
 function createApplication(){
@@ -13,6 +14,7 @@ function createApplication(){
 
 
   // routes
+  app.use('/api/route', authRoute);
   
   app.get('/health', (req, res)=>{
     res.status(200).send({ok: true})
