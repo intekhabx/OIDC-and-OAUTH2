@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Authenticate YourSelf</title>
+<link rel="icon" type="image/png" href="./images/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="authenticate.css">
+<style>
+
+  .hide{
+    display: none;
+  }
+
+  .warning-note {
+  margin-top: 10px;
+  color: #ff4d4d;
+  font-size: 12.5px;
+  background: rgba(255, 77, 77, 0.08);
+  padding: 10px 12px;
+  border-left: 3px solid #ff4d4d;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+.success-note {
+  margin-top: 10px;
+  color: #4dff68;
+  font-size: 12.5px;
+  background: rgba(255, 77, 77, 0.08);
+  padding: 10px 12px;
+  border-left: 3px solid #4dff4d;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+</style>
+</head>
+<body>
+
+<div class="blobs">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<!-- ── REGISTER PAGE ── -->
+<div id="reg-page" class="page">
+  <div class="card">
+    <div class="left">
+      <div class="logo">
+        <div class="logo-box"></div>
+        <div class="logo-box sm"></div>
+      </div>
+      <h1>Welcome<br>User!</h1>
+      <div class="dash"></div>
+      <p>Join us today and unlock a world of possibilities tailored just for you.</p>
+      <button class="learn-btn">Learn More →</button>
+    </div>
+    <div class="right">
+      <div class="form-head">
+        <div class="logo">
+          <div class="logo-box"></div>
+          <div class="logo-box sm"></div>
+        </div>
+        <h2>Create Account!</h2>
+        <p>Fill in the details below to get started</p>
+      </div>
+
+      <form id="register-form">
+        <div class="row2">
+          <div class="fg">
+            <label>Full Name</label>
+            <input id="name" type="text" placeholder="John Doe" name="name" required/>
+          </div>
+          <div class="fg">
+            <label>Username</label>
+            <input id="username" type="text" placeholder="johndoe99" name="username" required/>
+          </div>
+        </div>
+  
+        <div class="fg">
+          <label>Email Address</label>
+          <input id="email" type="email" placeholder="john@example.com" name="email" required/>
+        </div>
+  
+        <div class="row2">
+          <div class="fg">
+            <label>Password</label>
+            <input id="r-password" type="password" placeholder="••••••••" name="password" required/>
+          </div>
+          <div class="fg">
+            <label>Confirm Password</label>
+            <input id="confirm-password" type="password" placeholder="••••••••" name="confirm_password" required/>
+          </div>
+        </div>
+  
+        <button id="reg-btn" class="submit-btn">Create Account</button>
+      </form>
+
+      <div class="switch-text">
+        Already have an account? <a onclick="show('login')">Sign In</a>
+      </div>
+
+      <p id="reg-warning" class="warning-note hide"></p>
+      <p id="reg-success" class="success-note hide"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ── LOGIN PAGE ── -->
+<div id="login-page" class="page active">
+  <div class="card">
+    <div class="left">
+      <div class="logo">
+        <div class="logo-box"></div>
+        <div class="logo-box sm"></div>
+      </div>
+      <h1>Welcome<br>Back!</h1>
+      <div class="dash"></div>
+      <p>Great to see you again. Sign in to continue your journey with us.</p>
+      <button class="learn-btn">Learn More →</button>
+    </div>
+    <div class="right">
+      <div class="form-head">
+      <div class="logo">
+        <div class="logo-box"></div>
+        <div class="logo-box sm"></div>
+      </div>
+        <h2>Sign in</h2>
+        <p>Enter your credentials to access your account</p>
+      </div>
+
+      <form id="login-form">
+        <div class="fg">
+          <label>Username or Email</label>
+          <input id="email-username" type="text" placeholder="johndoe99 or john@example.com" name="identifier" required/>
+        </div>
+  
+        <div class="fg">
+          <label>Password</label>
+          <input id="log-password" type="password" placeholder="••••••••" name="password" required/>
+        </div>
+  
+        <button class="submit-btn">Sign In</button>
+      </form>
+
+      <div class="switch-text">
+        Don't have an account? <a onclick="show('reg')">Register</a>
+      </div>
+
+      <p id="log-warning" class="warning-note hide"></p>
+      <p id="log-success" class="success-note hide"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function show(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(page === 'login' ? 'login-page' : 'reg-page').classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  const registerForm = document.getElementById("register-form");
+  const loginForm = document.getElementById('login-form');
+  const regWarningTag = document.querySelector('#reg-warning');
+  const regSuccessTag = document.querySelector('#reg-success');
+  const logWarningTag = document.querySelector('#log-warning');
+  const logSuccessTag = document.querySelector("#log-success");
+  let timeoutId;
+
+  function showWarningNote(message, tag){
+      tag.classList.remove('hide');
+      tag.textContent = message;
+      // clear previous timeout
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+
+      timeoutId = setTimeout(() => {
+        tag.classList.add('hide');
+      }, 4000);
+      return;
+  }
+
+  async function showSuccessNote(message, tag){
+    tag.classList.remove('hide');
+    tag.textContent = message;
+
+      await new Promise((resolve)=>{
+        setTimeout(() => {
+          tag.classList.add('hide');
+          resolve();
+        }, 2000)
+      })
+  }
+
+  registerForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    
+    const name = document.getElementById('name').value;
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('r-password').value;
+    const confirm_password = document.getElementById('confirm-password').value;
+
+    if(password !== confirm_password){
+      const message = "password and confirm password donesn't match";
+      showWarningNote(message, regWarningTag);
+      return;
+    }
+
+    const response = await fetch('/api/auth/register', {method: "POST", 
+    headers: {
+      "Content-Type": "application/json"
+    }, 
+    body: JSON.stringify({name, username, email, password, confirm_password})
+    })
+
+    const data = await response.json();
+
+    if(response.ok){
+      const message = "Redirecting to Login ✅️"
+      await showSuccessNote(message, regSuccessTag);
+      window.location.href = '/oidc/oauth2/authenticate';
+    }
+    else{
+      const message = data.message || data.error[0]?.message|| data.data.message || "Error";
+      showWarningNote(message, regWarningTag);
+    }
+  })
+
+
+  loginForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+
+    const identifier = document.getElementById('email-username').value;
+    const password = document.getElementById('log-password').value;
+
+    const response = await fetch("/api/auth/login", {method: "POST", 
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({identifier, password})
+    })
+
+    const data = await response.json();
+
+    if(response.ok){
+      const message = "Logged In✅️ - redirecting to home page";
+      await showSuccessNote(message, logSuccessTag);
+      window.location.href = "/"
+    }
+    else{
+      const message = data.message || data.error[0]?.message|| data.data.message || "Error";
+      showWarningNote(message, logWarningTag);
+    }
+
+  })
+</script>
+</body>
+</html>

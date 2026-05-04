@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Register Application</title>
+<link rel="icon" type="image/png" href="./images/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="authenticate.css"/>
+<style>
+  /* EXTRA ONLY FOR APPLICATION PAGE */
+#extra-fields {
+  display: none;
+  margin-top: 18px;
+  animation: fadeIn 0.3s ease;
+}
+
+.checkbox{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox label{
+  margin-top: 8px;
+}
+
+.checkbox input[type="checkbox"] {
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border: 2px solid #8e627837;
+  border-radius: 20px;
+  display: grid;
+  place-content: center;
+}
+
+.checkbox input[type="checkbox"]:checked {
+  background: #c84b8a;
+}
+
+.checkbox input[type="checkbox"]:checked::after {
+  content: "✔";
+  font-size: 12px;
+  color: white;
+}
+
+  .hide{
+    display: none;
+  }
+
+  .warning-note {
+  margin-top: 10px;
+  color: #ff4d4d;
+  font-size: 12.5px;
+  background: rgba(255, 77, 77, 0.08);
+  padding: 10px 12px;
+  border-left: 3px solid #ff4d4d;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  line-height: 1.4;
+  }
+
+.alert-note {
+  color: #94e235;
+  font-size: 12.5px;
+  background: rgba(255, 77, 77, 0.08);
+  padding: 10px 12px;
+  border-left: 3px solid #53e06b;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+.client{
+  overflow-wrap: anywhere;
+  margin-top: 10px;
+  font-size: 12.5px;
+  background: rgba(255, 77, 77, 0.08);
+  padding: 10px 12px;
+  border-left: 3px solid #c84b8a;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+/* input[readonly] {
+  background: rgba(120, 80, 160, 0.25);
+  border: 1px solid rgba(200, 75, 138, 0.4);
+  cursor: not-allowed;
+  color: #e8d8ff;
+} */
+
+/* smooth reveal animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="blobs">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<!-- APPLICATION PAGE -->
+<div id="app-page" class="page active">
+
+  <div class="card">
+
+    <!-- LEFT -->
+    <div class="left">
+      <div class="logo">
+        <div class="logo-box"></div>
+        <div class="logo-box sm"></div>
+      </div>
+
+      <h1>Register<br>Application</h1>
+
+      <div class="dash"></div>
+
+      <p>Submit your application details to integrate with our system.</p>
+
+      <button class="learn-btn">Learn More →</button>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+
+      <div class="form-head">
+          <div class="logo">
+          <div class="logo-box"></div>
+        <div class="logo-box sm"></div>
+        </div>
+        <h2>Application Form!</h2>
+        <p>Fill required details to connect with us</p>
+      </div>
+
+      <form id="appForm">
+
+        <div class="fg">
+          <label>Application Name</label>
+          <input id="name" type="text" placeholder="My App" name="name" required />
+        </div>
+
+        <div class="fg">
+          <label>Application URL</label>
+          <input id="url" type="url" placeholder="https://example.com" name="url" required />
+        </div>
+
+        <div class="fg">
+          <label>Redirect URL</label>
+          <input id="redirect-url" type="url" placeholder="https://example.com/callback" name="redirect_url" required />
+        </div>
+
+        <div class="fg checkbox">
+          <input type="checkbox" id="terms" required>
+          <label for="terms">I agree to Terms & Conditions</label>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          Register Application
+        </button>
+
+        <p id="app-warning" class="warning-note hide"></p>
+
+        <!-- hidden fields -->
+        <div id="extra-fields">
+
+          <p class="alert-note">
+    ⚠️ Save these credentials for future purpose. If you miss them, you will not be able to see them again.
+          </p>
+
+          <div class="fg">
+            <label>CLIENT ID</label>
+            <div id="client-id" class="client"></div>
+          </div>
+
+          <div class="fg">
+            <label>CLIENT SECRET</label>
+            <div id="client-secret" class="client"></div>
+          </div>
+
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import {renewAccessTokenAndRefreshToken} from "./refresh-token.js";
+
+  const appForm = document.getElementById('appForm');
+  const warningTag = document.getElementById("app-warning");
+
+  let accessToken;
+  // get accesstoken using refreshToken
+  (async function () {
+    accessToken = await renewAccessTokenAndRefreshToken();
+    // console.log(accessToken)
+  })();
+
+
+  let timeoutId;
+  function showWarningNote(message, tag){
+    tag.classList.remove('hide');
+    tag.textContent = message;
+    // clear previous timeout
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+      tag.classList.add('hide');
+    }, 4000);
+    return;
+  }
+
+
+  async function sendApplicationData(){
+    const name = document.getElementById('name').value;
+    const url = document.getElementById('url').value;
+    const redirect_url = document.getElementById('redirect-url').value;
+
+    try {
+      const response = await fetch('/oidc/oauth2/register-application', {method: "POST", headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({name, url, redirect_url})
+      })
+
+      const data = await response.json();
+      // console.log(data);
+
+      if(response.ok){
+        document.getElementById("client-id").textContent = data.data.clientId;
+        document.getElementById("client-secret").textContent = data.data.clientSecret
+        //show the field
+        document.getElementById("extra-fields").style.display = "block";
+      }
+      else{
+        const message = data.message || data.error[0]?.message|| data.data.message || "Error";
+        showWarningNote(message, warningTag);
+        return;
+      }
+    } 
+    catch (err) {
+      const message = err.message || err.data.message || "Error"
+      showWarningNote(message, warningTag);
+    }
+  }
+
+
+  appForm.addEventListener('submit', async(e)=>{
+    e.preventDefault();
+    sendApplicationData();
+  })
+</script>
+
+</body>
+</html>

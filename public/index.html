@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Home</title>
+<link rel="icon" type="image/png" href="./images/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="authenticate.css"/>
+
+<style>
+@media (max-width: 700px) {
+  .left {
+    display: flex !important;
+    width: 100% !important;
+    padding: 50px 20px !important;
+    text-align: center !important;
+  }
+
+  .card {
+    flex-direction: column !important;
+  }
+}
+
+  .cta-heading{
+    font-size:44px; 
+    margin-top:20px;
+  }
+
+  .cta-btn{
+    width: fit-content;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    margin-top: 20px;
+  }
+
+  .github-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 14px;
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+/* ICON */
+.github-icon {
+  width: 18px;
+  height: 18px;
+  fill: #ffffff;
+  transition: transform 0.25s ease, fill 0.25s ease;
+}
+
+/* HOVER EFFECT */
+.github-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(200, 75, 138, 0.4);
+}
+
+.github-btn:hover .github-icon {
+  transform: rotate(-10deg) scale(1.1);
+  fill: #c84b8a;
+}
+
+.login-btn{
+  padding:8px 14px; 
+  border-radius:20px;
+  background:linear-gradient(90deg,#c84b8a,#7c3aed);
+  color:#fff; text-decoration:none; font-size:13px; font-weight: 600;
+  cursor: pointer;
+}
+
+.login-btn:hover{
+    background:linear-gradient(90deg,#c43b7f,#602bbd);
+}
+
+.nav-logo{
+  display: flex;
+  gap: 8px;
+}
+
+.nav-logo .logo-box{
+  width: 25px;
+  height: 25px;
+  border-radius: 5px;
+}
+
+.nav-logo .sm{
+  width: 15px;
+}
+
+a{
+  text-decoration: none;
+}
+
+.logout{
+  padding:8px 14px; 
+  border-radius:20px;
+  border: none;
+  background-color: rgb(220, 56, 56);
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+}
+.logout:hover{
+  background-color: rgb(208, 23, 23);
+}
+.hide{
+  display: none;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- BACKGROUND BLOBS -->
+<div class="blobs">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<div class="page active">
+
+  <div class="card" style="flex-direction:column;">
+
+    <!-- NAVBAR -->
+    <header style="display:flex; justify-content:space-between; align-items:center; padding:18px 24px; border-bottom:1px solid rgba(255,255,255,0.08);">
+
+      <!-- LOGO -->
+      <div class="nav-logo">
+        <div class="logo-box"></div>
+        <div class="logo-box sm"></div>
+      </div>
+
+      <!-- NAV ACTIONS -->
+      <nav style="display:flex; gap:12px; align-items:center;">
+
+        <!-- GitHub -->
+        <a class="github-btn" href="https://github.com/intekhabx" target="_blank">
+        <!-- simple github svg -->
+        <svg height="18" width="18" viewBox="0 0 24 24" fill="white">
+          <path d="M12 .5C5.7.5.8 5.6.8 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2.2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.8.1-.8.1-.8 1.2.1 1.8 1.2 1.8 1.2 1.1 1.9 3 1.3 3.8 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.5.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A10.9 10.9 0 0 0 23.2 12C23.2 5.6 18.3.5 12 .5z"/>
+        </svg>
+        GitHub
+      </a>
+
+        <!-- LOGIN -->
+        <a id="login-btn" href="/oidc/oauth2/authenticate" class="login-btn">
+          Sign In
+        </a>
+        <!-- LOGOUT -->
+        <button id="logout-btn" class="logout hide">
+          Logout
+        </button>
+
+      </nav>
+
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="left" style="width:100%; text-align:center; align-items:center; padding:60px 40px;">
+
+      <div class="nav-logo" style="justify-content:center;">
+        <div class="logo-box"></div>
+        <div class="logo-box sm"></div>
+      </div>
+
+      <h1 class="cta-heading">
+        Secure Authentication<br>with OAuth2 & OIDC
+      </h1>
+
+      <p style="max-width:520px;">
+        Build secure authentication systems using OAuth 2.0 and OpenID Connect.
+        Manage user identity and authorization safely in modern applications.
+      </p>
+
+      <!-- HERO CTA -->
+        <button id="app-btn1" class="submit-btn cta-btn reg-btn">
+          Register Application
+        </button>
+
+    </section>
+
+    <!-- BLOG SECTION -->
+    <section class="right" style="width:100%;">
+
+      <header class="form-head">
+        <h2>What is OAuth 2.0 & OpenID Connect?</h2>
+        <p>Simple developer-friendly explanation</p>
+      </header>
+
+      <article style="color:rgba(210,175,245,0.75); font-size:14px; line-height:1.8;">
+
+        <p>
+          OAuth 2.0 is an authorization framework that allows applications to access user data without sharing passwords.
+        </p>
+
+        <p>
+          It works by issuing access tokens instead of exposing credentials directly.
+        </p>
+
+        <p>
+          OpenID Connect (OIDC) is built on top of OAuth 2.0 and adds authentication capabilities.
+        </p>
+
+        <p>
+          It allows applications to verify user identity in a secure and standardized way.
+        </p>
+
+      </article>
+
+      <button id="app-btn2" class="learn-btn reg-btn" style="margin-top:25px;">
+        Register Application →
+    </button>
+
+    </section>
+
+  </div>
+
+</div>
+
+
+<script type="module">
+  import {renewAccessTokenAndRefreshToken} from "./refresh-token.js"
+  let accessToken;
+
+  // login se jbv redirect hoga ye call hoga aur token laayega
+  (async function (){
+    accessToken = await renewAccessTokenAndRefreshToken();
+    if(accessToken){
+      showLogoutBtn();
+    }
+  })();
+
+  // verify access token route bana pehle accesstoken verify krke logout button dikhana chahiye but aise hi dikha dete hai
+  const logoutBtn = document.getElementById('logout-btn');
+  const loginBtn = document.getElementById('login-btn');
+
+  function showLogoutBtn(){
+    if(!(accessToken && accessToken?.trim())){
+      return;
+    }
+
+    logoutBtn.classList.remove('hide');
+    loginBtn.classList.add('hide')
+  }
+  showLogoutBtn();
+
+
+  logoutBtn.addEventListener('click', async (e)=>{
+    const isOk = confirm("Are you want to logout")
+    if(!isOk){
+      return;
+    }
+    
+    const response = await fetch("/api/auth/logout", {method: "POST", 
+    headers: {
+      "Authorization": `Bearer ${accessToken}`
+    }
+    });
+
+    if(response.ok){
+      accessToken = "";
+      alert("you are logged-out");
+      logoutBtn.classList.add('hide');
+      loginBtn.classList.remove('hide')
+    }
+    else{
+      alert("something went wrong");
+    }
+  })
+
+
+
+  // application form
+  const applicationBtn1 = document.getElementById('app-btn1').addEventListener('click', openRegisterApplicationPage)
+  const applicationBtn2 = document.getElementById('app-btn2').addEventListener('click', openRegisterApplicationPage);
+
+  async function openRegisterApplicationPage(e){
+    if(!(accessToken && accessToken?.trim())){
+      window.location.href = "/oidc/oauth2/authenticate"
+      return;
+    }
+    // console.log(accessToken)
+    window.location.href = "/api/developer-console"
+
+    // const response = await fetch('/api/developer-console', {method: "GET", headers: {
+    //   "Authorization": `Bearer ${accessToken}`
+    // }});
+
+    // if(response.ok){
+    //   window.location.href = "/api/developer-console"
+    // }
+    // else{
+    //   window.location.href = "/oidc/oauth2/authenticate";
+    // }
+  }
+</script>
+</body>
+</html>
