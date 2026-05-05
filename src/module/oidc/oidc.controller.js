@@ -5,6 +5,8 @@ import ApiError from '../../common/utils/api-error.utils.js';
 import ApiResponse from '../../common/utils/api-response.utils.js';
 import {applicationModel} from './oidc.model.js';
 import { jwks } from '../../common/config/key.config.js';
+import userModel from '../auth/auth.model.js';
+import {verifyRefreshToken} from '../../common/utils/jwt.utils.js'
 
 
 
@@ -23,7 +25,7 @@ export const wellKnownController = asyncHandler(async (_, res)=>{
   const baseURL = process.env.ISSUER_URL;
   res.status(200).json({
     issuer: `${baseURL}`,
-    authorization_endpoint: `${baseURL}/oidc/oauth2/authenticate`,
+    authorization_endpoint: `${baseURL}/oidc/oauth2/authorize`,
     userinfo_endpoint: `${baseURL}/oidc/oauth2/userinfo`,
     token_endpoint: `${baseURL}/token`,
     jwks_uri: `${baseURL}/oidc/oauth2/certs`,
@@ -55,7 +57,9 @@ export const getPublicKey = asyncHandler(async (req, res)=>{
 
 
 export const renderAuthentictePage = asyncHandler(async (req, res)=>{
-  res.status(200).redirect('/authenticate.html')
+  const {redirect_url, state, client_id} = req?.query;
+  const query = `redirect_url=${redirect_url}&client_id=${client_id}&state=${state}`;
+  res.status(200).redirect(`/authenticate.html?${query}`)
 })
 
 export const renderRegisterApplicationPage = asyncHandler(async(req, res)=>{
@@ -87,3 +91,50 @@ export const registerApplication = asyncHandler(async (req, res)=>{
   // step:4 - return clientId and clientSecret to the application owner
   ApiResponse.created(res, "application registered successfully", {clientId, clientSecret});
 })
+
+
+export const applicationUserLoginConsent = asyncHandler(async (req, res)=>{
+  // step:1 - extract all details from query
+  const {redirect_url, client_id, state} = req?.query;
+  const query = `redirect_url=${redirect_url}&client_id=${client_id}&state=${state}`;
+
+  // step:2 - if anyone is missing
+  if(!redirect_url || !client_id || !state){
+    return res.status(308).redirect(`/error.html?${query}`);
+    // throw ApiError.unAuthorized("invalid or missing query parameters");
+  }
+
+  // step:3 - check applitaction is registered or not
+  // const app = await applicationModel.findOne({$and: [{redirectUrl: redirect_url}, {clientId: client_id}]}); //explicity and likhne ki jaroorat nhi hoti but ye v sahi hai
+  const app = await applicationModel.findOne({redirectUrl: redirect_url, clientId: client_id});
+
+  if(!app){
+    return res.status(308).redirect(`/error.html?${query}`);
+    // throw ApiError.unAuthorized("invalid query parameters");
+  }
+
+  // step:4 check user is logged-in or not with long lived refresh-token 
+  const refreshToken = req?.cookies?.refreshToken;
+  if(!refreshToken){
+    return res.status(302).redirect(`/oidc/oauth2/authenticate?${query}`);
+  }
+  const decoded = verifyRefreshToken(refreshToken);
+  const user = await userModel.findOne({id: decoded.sub}).select("+refreshToken");
+
+  const hashedRefreshToken = makeDataHash(refreshToken);
+  if(user.refreshToken !== hashedRefreshToken){
+    return res.status(302).redirect(`/oidc/oauth2/authenticate?${query}`);
+  }
+
+  // step:5 - now user and app is authenticated and logged-in then show the consent page
+  // we add session data in session
+  const userObj = user.toObject();
+  delete userObj.refreshToken;
+
+  // req.session.user = userObj;
+  // req.session.app = app;
+  res.status(302).redirect(`/consent.html?${query}`);
+})
+
+
+

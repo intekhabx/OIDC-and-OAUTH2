@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sign in with AuthApp</title>
+<link rel="icon" type="image/png" href="./images/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="authenticate.css" />
+<style>
+  /* page top padding for topbar */
+  .page {
+    padding-top: 80px;
+    padding-bottom: 32px;
+  }
+
+  /* wider card */
+  .card {
+    max-width: 860px;
+  }
+
+  /* bigger left like screenshot */
+  .left {
+    flex: 1.15;
+    padding: 52px 44px;
+  }
+
+  /* visible decorative blobs inside left */
+  .left-blob {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .lb-top {
+    width: 260px; height: 260px;
+    top: -60px; right: -40px;
+    background: rgba(120, 40, 200, 0.3);
+  }
+  .lb-bottom {
+    width: 200px; height: 200px;
+    bottom: -60px; right: 40px;
+    background: rgba(100, 30, 180, 0.28);
+  }
+  .lb-mid {
+    width: 120px; height: 120px;
+    bottom: 40px; left: -20px;
+    background: rgba(90, 20, 160, 0.22);
+  }
+
+  /* right panel */
+  .right {
+    flex: 1;
+    padding: 44px 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  /* account pill */
+  .account-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px 5px 5px;
+    border-radius: 30px;
+    border: 1px solid rgba(170, 110, 230, 0.28);
+    background: rgba(90, 35, 130, 0.4);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    max-width: 100%;
+    margin-bottom: 22px;
+  }
+  .account-pill:hover {
+    border-color: rgba(200, 75, 138, 0.5);
+    background: rgba(110, 45, 160, 0.45);
+  }
+  .acc-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .acc-email {
+    font-size: 12.5px; color: var(--text);
+    white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; max-width: 190px;
+  }
+  .acc-arrow { font-size: 10px; color: var(--muted); flex-shrink: 0; }
+
+  /* consent heading */
+  .consent-title {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.55;
+    margin-bottom: 18px;
+  }
+
+  /* permission rows */
+  .perm-list { display: flex; flex-direction: column; }
+  .perm-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(150, 90, 210, 0.15);
+  }
+  .perm-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .perm-ico { font-size: 18px; flex-shrink: 0; width: 24px; text-align: center; margin-top: 1px; }
+  .perm-info strong { display: block; font-size: 13.5px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .perm-info span { font-size: 12px; color: var(--muted); }
+
+  /* footer links */
+  .footer-links {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .footer-text {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+  .footer-text a { color: #c48cff; text-decoration: none; }
+  .footer-text a:hover { text-decoration: underline; }
+
+  /* buttons — right aligned like Google */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+  .btn-cancel {
+    padding: 11px 28px;
+    border-radius: 30px;
+    border: 1.5px solid rgba(170, 110, 230, 0.28);
+    background: transparent;
+    color: var(--text);
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-cancel:hover {
+    border-color: rgba(200, 75, 138, 0.5);
+    background: rgba(200, 75, 138, 0.06);
+  }
+  .btn-continue {
+    padding: 11px 28px;
+    border-radius: 30px; border: none;
+    background: linear-gradient(90deg, #c84b8a, #7c3aed);
+    color: #fff; font-family: inherit;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer; letter-spacing: 0.3px;
+    transition: opacity 0.18s, transform 0.1s;
+  }
+  .btn-continue:hover { opacity: 0.87; }
+  .btn-continue:active { transform: scale(0.98); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .page { padding-top: 68px; padding-left: 0; padding-right: 0; align-items: flex-start; }
+    .card {
+      flex-direction: column;
+      border-radius: 22px;
+      margin: 0 20px;
+      width: calc(100% - 40px);
+    }
+    .left {
+      flex: none;
+      border-right: none;
+      border-bottom: 1px solid rgba(150, 90, 210, 0.18);
+      padding: 32px 24px 28px;
+    }
+    .lb-top { width: 160px; height: 160px; }
+    .lb-bottom { width: 130px; height: 130px; }
+    .right { padding: 28px 24px 32px; }
+    .btn-row { flex-direction: column-reverse; justify-content: stretch; gap: 10px; }
+    .btn-cancel, .btn-continue { width: 100%; text-align: center; }
+  }
+
+  @media (max-width: 400px) {
+    .card { margin: 0 16px; width: calc(100% - 32px); }
+    .left { padding: 24px 18px 22px; }
+    .right { padding: 22px 18px 28px; }
+    .acc-email { max-width: 150px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blobs">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+</div>
+
+<div class="page active">
+  <div class="card">
+
+    <!-- LEFT -->
+    <div class="left">
+      <div class="left-blob lb-top"></div>
+      <div class="left-blob lb-bottom"></div>
+      <div class="left-blob lb-mid"></div>
+
+      <div class="logo" style="position:relative;z-index:1;">
+        <div class="logo-box"></div>
+        <div class="logo-box sm"></div>
+      </div>
+
+      <h1 style="position:relative;z-index:1;">Sign in to<br>MyApp</h1>
+      <div class="dash" style="position:relative;z-index:1;"></div>
+      <p style="position:relative;z-index:1;max-width:260px;">Authorize MyApp to securely access your account information.</p>
+      <button class="learn-btn" style="position:relative;z-index:1;">Learn More →</button>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
+
+      <div class="logo" style="margin-bottom:20px;">
+        <div class="logo-box"></div>
+        <div class="logo-box sm"></div>
+      </div>
+
+      <!-- account pill -->
+      <div class="account-pill">
+        <div class="acc-avatar">👤</div>
+        <span class="acc-email">john@example.com</span>
+        <span class="acc-arrow">▾</span>
+      </div>
+
+      <!-- consent heading -->
+      <p class="consent-title">
+        AuthApp will allow <strong style="color:#fff;">MyApp</strong> to access this info about you
+      </p>
+
+      <!-- permissions -->
+      <div class="perm-list">
+        <div class="perm-row">
+          <div class="perm-ico">👤</div>
+          <div class="perm-info">
+            <strong>John Doe</strong>
+            <span>Name and profile picture</span>
+          </div>
+        </div>
+        <div class="perm-row">
+          <div class="perm-ico">📧</div>
+          <div class="perm-info">
+            <strong>john@example.com</strong>
+            <span>Email address</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- footer links -->
+      <div class="footer-links">
+        <p class="footer-text">
+          Review <a href="#">privacy policy</a> and <a href="#">Terms of Service</a>
+          to understand how we will protect your data.
+        </p>
+        <p class="footer-text">
+          To make changes at any time, go to your <a href="#">Account Settings</a>.
+        </p>
+        <p class="footer-text">
+          Learn more about <a href="#">Sign in with AuthApp</a>.
+        </p>
+      </div>
+
+      <!-- buttons -->
+      <div class="btn-row">
+        <button id="cancel" class="btn-cancel" onclick="history.back()">Cancel</button>
+        <button id="continue" class="btn-continue" onclick="handleContinue(this)">Continue</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script type="module">
+
+  import {renewAccessTokenAndRefreshToken} from './refresh-token.js'
+
+  let accessToken;
+  (async function() {
+    accessToken = await renewAccessTokenAndRefreshToken();
+  })();
+
+
+
+  function handleContinue(btn) {
+    btn.textContent = 'Signing in…';
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    setTimeout(() => {
+      btn.textContent = '✓ Done';
+      btn.style.background = 'linear-gradient(90deg,#22c55e,#16a34a)';
+      btn.style.opacity = '1';
+    }, 1000);
+  }
+
+  const continueBtn = document.getElementById('continue');
+  const cancelBtn = document.getElementById('cancel');
+
+  continueBtn.addEventListener('click', async ()=>{
+    const response = await fetch('/oidc/oauth2/consent', {method: "POST", headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${accessToken}`
+    }})
+
+    const data = await response.json();
+    console.log(data);
+  })
+
+  // cancelBtn.addEventListener('click', ()=>{})
+
+</script>
+
+</body>
+</html>
