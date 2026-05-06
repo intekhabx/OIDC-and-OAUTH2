@@ -329,8 +329,10 @@
     body: JSON.stringify({consent_id})
     })
 
-    const data = await response.json();
-    console.log(data);
+    // important for redirection
+    if (response.redirected) {
+      window.location.href = response.url;
+    }
   })
 
 
@@ -342,8 +344,10 @@
     body: JSON.stringify({consent_id})
     })
 
-    const data = await response.json();
-    console.log(data);
+    // important for redirection
+    if (response.redirected) {
+      window.location.href = response.url;
+    }
   })
 
 </script>

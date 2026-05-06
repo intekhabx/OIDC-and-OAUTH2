@@ -37,4 +37,23 @@ const applicationSchema = new mongoose.Schema({
 }, {timestamps: true});
 
 
+const consentSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  },
+  application: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Application"
+  },
+  scope: [{
+    type: String
+  }],
+  granted: {
+    type: Boolean,
+    default: false
+  },
+}, {timestamps: true});
+
 export const applicationModel = mongoose.model("Application", applicationSchema);
+export const consentModel = mongoose.model("Consent", consentSchema);

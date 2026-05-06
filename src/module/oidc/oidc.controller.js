@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import asyncHandler from "../../common/utils/async-handler.utils.js";
 import ApiError from '../../common/utils/api-error.utils.js';
 import ApiResponse from '../../common/utils/api-response.utils.js';
-import {applicationModel} from './oidc.model.js';
+import {applicationModel, consentModel} from './oidc.model.js';
 import { jwks } from '../../common/config/key.config.js';
 import userModel from '../auth/auth.model.js';
 import {verifyRefreshToken} from '../../common/utils/jwt.utils.js'
@@ -190,7 +190,7 @@ export const getUserAndAppDetails = asyncHandler(async (req, res)=>{
     userName: parsedData.userName,
     userEmail: parsedData.userEmail,
     appName: parsedData.appName,
-    state: parsedData.state
+    // state: parsedData.state
   });
 })
 
@@ -200,15 +200,31 @@ export const acceptConsent = asyncHandler(async(req, res)=>{
   // step:1 - now user give his consent, extract consent_id
   const {consent_id} = req.body;
 
-  // step:2 - store consent in DB and delete from redis
+  // step:2 - find data in redis with consent_id
+  const data = await redis.get(`consent:${consent_id}`);
+  if (!data) {
+    return res.status(400).redirect("/error.html");
+  }
+  const parsedRedisData = JSON.parse(data);
 
-
-  // step:3 generateShortCode
-  const shortCode = crypto.randomBytes(16).toString('hex');
+  // step:3 - store consent in DB and delete from redis
+  await consentModel.create({
+    granted: true,
+    scope: ["openid", "profile", "email"]
+  })
+  await redis.del(`consent:${consent_id}`);
   
-  // step:4 - redirect user to redirect_url with shortCode and state
-  console.log(req.user);
-  res.send("accept done")
+  // step:4 generateShortCode and store in redis with userId and client_id
+  const shortCode = crypto.randomBytes(16).toString('hex');
+
+  await redis.set(`shortcode:${shortCode}`, JSON.stringify({
+    userId: parsedRedisData.userId,
+    client_id: parsedRedisData.client_id,
+    redirect_url: parsedRedisData.redirect_url
+  }), "EX", 300) //5min
+  
+  // step:5 - redirect user to redirect_url with shortCode and state
+  res.status(302).redirect(`${parsedRedisData.redirect_url}?code=${shortCode}&state=${parsedRedisData.state}`);
 })
 
 
@@ -217,11 +233,19 @@ export const denyConsent = asyncHandler(async(req, res)=>{
   // step:1 - now user deny his consent, so extract consent_id
   const {consent_id} = req.body;
 
-  // step:2 - delete application details and user details from redis
+  // step:2 - extract redirect_url and state from redis before delete it
+  const data = await redis.get(`consent:${consent_id}`);
+  if(!data){
+    return res.status(400).redirect("/error.html");
+  }
+
+  const parsedRedisData = JSON.parse(data);
+
+  // step:3 - delete (application details and user details)-consent from redis
+  await redis.del(`consent:${consent_id}`);
   
-  // step:3 - redirect user to redirct_url with error_message and state
-  console.log(req.user);
-  res.send("reject done")
+  // step:4 - redirect user to redirct_url with error_message and state
+  res.status(302).redirect(`${parsedRedisData.redirect_url}?error_message=user-denied-consent&state=${parsedRedisData.state}`)
 })
 
 
