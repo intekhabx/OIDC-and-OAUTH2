@@ -7,6 +7,7 @@ import {applicationModel} from './oidc.model.js';
 import { jwks } from '../../common/config/key.config.js';
 import userModel from '../auth/auth.model.js';
 import {verifyRefreshToken} from '../../common/utils/jwt.utils.js'
+import { redis } from '../../common/config/redis.config.js';
 
 
 
@@ -93,14 +94,14 @@ export const registerApplication = asyncHandler(async (req, res)=>{
 })
 
 
-export const applicationUserLoginConsent = asyncHandler(async (req, res)=>{
+export const showUserConsentPage = asyncHandler(async (req, res)=>{
   // step:1 - extract all details from query
   const {redirect_url, client_id, state} = req?.query;
   const query = `redirect_url=${redirect_url}&client_id=${client_id}&state=${state}`;
 
   // step:2 - if anyone is missing
   if(!redirect_url || !client_id || !state){
-    return res.status(308).redirect(`/error.html?${query}`);
+    return res.status(302).redirect(`/error.html?${query}`);
     // throw ApiError.unAuthorized("invalid or missing query parameters");
   }
 
@@ -109,7 +110,7 @@ export const applicationUserLoginConsent = asyncHandler(async (req, res)=>{
   const app = await applicationModel.findOne({redirectUrl: redirect_url, clientId: client_id});
 
   if(!app){
-    return res.status(308).redirect(`/error.html?${query}`);
+    return res.status(302).redirect(`/error.html?${query}`);
     // throw ApiError.unAuthorized("invalid query parameters");
   }
 
@@ -118,8 +119,18 @@ export const applicationUserLoginConsent = asyncHandler(async (req, res)=>{
   if(!refreshToken){
     return res.status(302).redirect(`/oidc/oauth2/authenticate?${query}`);
   }
-  const decoded = verifyRefreshToken(refreshToken);
-  const user = await userModel.findOne({id: decoded.sub}).select("+refreshToken");
+
+  let decoded;
+  try {
+    decoded = verifyRefreshToken(refreshToken);
+  } catch {
+    return res.redirect(302, `/oidc/oauth2/authenticate?${query}`);
+  }
+
+  const user = await userModel.findById(decoded.sub).select("+refreshToken");
+  if(!user){
+    return res.redirect(302, `/oidc/oauth2/authenticate?${query}`);
+  }
 
   const hashedRefreshToken = makeDataHash(refreshToken);
   if(user.refreshToken !== hashedRefreshToken){
@@ -127,14 +138,92 @@ export const applicationUserLoginConsent = asyncHandler(async (req, res)=>{
   }
 
   // step:5 - now user and app is authenticated and logged-in then show the consent page
-  // we add session data in session
-  const userObj = user.toObject();
-  delete userObj.refreshToken;
+  // add app and user_data and state in redis to show on consent page
+  const consentId = crypto.randomUUID();
+  await redis.set(`consent:${consentId}`, JSON.stringify({
+    userId: user._id,
+    userName: user.name,
+    userEmail: user.email,
+    appName: app.name,
+    client_id: app.clientId,
+    state,
+    redirect_url,
+  }), "EX", 60 * 15);//15min
 
-  // req.session.user = userObj;
-  // req.session.app = app;
-  res.status(302).redirect(`/consent.html?${query}`);
+  res.status(302).redirect(`/consent.html?consent_id=${consentId}`);
 })
+
+
+export const getUserAndAppDetails = asyncHandler(async (req, res)=>{
+  // step:1 - user will came with consentId
+  const {consent_id} = req?.query;
+  if(!consent_id){
+    return res.status(400).redirect('/error.html');
+  }
+
+  //step:2 - get details in redis and send to consent page
+  const data = await redis.get(`consent:${consent_id}`);
+
+  if (!data) {
+    return res.status(400).redirect('/error.html');
+    // return res.status(400).json({ error: "Consent expired" });
+  }
+
+  // step:3 - parse the data that is coming from redis because data is stored in string in redis
+  let parsedData;
+  try {
+    parsedData = JSON.parse(data)
+  } catch (err) {
+    return res.status(500).redirect("/error.html");
+  }
+
+  // step:4 - verify the user, request is authentic or not with refreshToken
+  const refreshToken = req?.cookies?.refreshToken;
+  const decoded = verifyRefreshToken(refreshToken);
+
+  if(decoded.sub !== parsedData.userId.toString()){
+    return res.status(403).redirect("/error.html");
+  }
+
+  // step:5 - send user and application details to consent page
+  res.status(200).json({
+    userName: parsedData.userName,
+    userEmail: parsedData.userEmail,
+    appName: parsedData.appName,
+    state: parsedData.state
+  });
+})
+
+
+
+export const acceptConsent = asyncHandler(async(req, res)=>{
+  // step:1 - now user give his consent, extract consent_id
+  const {consent_id} = req.body;
+
+  // step:2 - store consent in DB and delete from redis
+
+
+  // step:3 generateShortCode
+  const shortCode = crypto.randomBytes(16).toString('hex');
+  
+  // step:4 - redirect user to redirect_url with shortCode and state
+  console.log(req.user);
+  res.send("accept done")
+})
+
+
+
+export const denyConsent = asyncHandler(async(req, res)=>{
+  // step:1 - now user deny his consent, so extract consent_id
+  const {consent_id} = req.body;
+
+  // step:2 - delete application details and user details from redis
+  
+  // step:3 - redirect user to redirct_url with error_message and state
+  console.log(req.user);
+  res.send("reject done")
+})
+
 
 
 

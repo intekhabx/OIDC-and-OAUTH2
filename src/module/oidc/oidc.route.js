@@ -17,8 +17,10 @@ router.post('/oidc/oauth2/register-application',validate(registerApplicationDto)
 
 router.get('/oidc/oauth2/certs', controller.getPublicKey);
 
-router.get('/oidc/oauth2/authorize', controller.applicationUserLoginConsent);
-router.post('/oidc/oauth2/consent', isLoggedIn, controller.applicationUserConsent);
+router.get('/oidc/oauth2/authorize', controller.showUserConsentPage);
+router.get('/oidc/oauth2/consent-info', isLoggedIn, controller.getUserAndAppDetails);
+router.post('/oidc/oauth2/consent/accept', isLoggedIn, controller.acceptConsent);
+router.post('/oidc/oauth2/consent/deny', isLoggedIn, controller.denyConsent);
 
 
 

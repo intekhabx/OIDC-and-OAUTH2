@@ -210,9 +210,9 @@
         <div class="logo-box sm"></div>
       </div>
 
-      <h1 style="position:relative;z-index:1;">Sign in to<br>MyApp</h1>
+      <h1 style="position:relative;z-index:1;">Sign in to<br><span style="color: #e263eb;" class="app-name"></span></h1>
       <div class="dash" style="position:relative;z-index:1;"></div>
-      <p style="position:relative;z-index:1;max-width:260px;">Authorize MyApp to securely access your account information.</p>
+      <p style="position:relative;z-index:1;max-width:260px;">Authorize <span class="app-name"></span> to securely access your account information.</p>
       <button class="learn-btn" style="position:relative;z-index:1;">Learn More →</button>
     </div>
 
@@ -233,7 +233,7 @@
 
       <!-- consent heading -->
       <p class="consent-title">
-        AuthApp will allow <strong style="color:#fff;">MyApp</strong> to access this info about you
+        We will allow <strong class="app-name" style="color:#e263eb;">MyApp</strong> to access this info about you
       </p>
 
       <!-- permissions -->
@@ -241,14 +241,14 @@
         <div class="perm-row">
           <div class="perm-ico">👤</div>
           <div class="perm-info">
-            <strong>John Doe</strong>
+            <strong class="acc-name">John Doe</strong>
             <span>Name and profile picture</span>
           </div>
         </div>
         <div class="perm-row">
           <div class="perm-ico">📧</div>
           <div class="perm-info">
-            <strong>john@example.com</strong>
+            <strong class="acc-email">john@example.com</strong>
             <span>Email address</span>
           </div>
         </div>
@@ -264,14 +264,14 @@
           To make changes at any time, go to your <a href="#">Account Settings</a>.
         </p>
         <p class="footer-text">
-          Learn more about <a href="#">Sign in with AuthApp</a>.
+          Learn more about <a href="#">Sign in with Us</a>.
         </p>
       </div>
 
       <!-- buttons -->
       <div class="btn-row">
-        <button id="cancel" class="btn-cancel" onclick="history.back()">Cancel</button>
-        <button id="continue" class="btn-continue" onclick="handleContinue(this)">Continue</button>
+        <button id="cancel" class="btn-cancel" >Cancel</button>
+        <button id="continue" class="btn-continue">Continue</button>
       </div>
 
     </div>
@@ -285,35 +285,66 @@
   let accessToken;
   (async function() {
     accessToken = await renewAccessTokenAndRefreshToken();
+    getUserandAppDetails();
   })();
 
 
 
-  function handleContinue(btn) {
-    btn.textContent = 'Signing in…';
-    btn.disabled = true;
-    btn.style.opacity = '0.7';
-    setTimeout(() => {
-      btn.textContent = '✓ Done';
-      btn.style.background = 'linear-gradient(90deg,#22c55e,#16a34a)';
-      btn.style.opacity = '1';
-    }, 1000);
+  const params = new URLSearchParams(window.location.search);
+  const consent_id = params.get('consent_id');
+
+  let appName = document.querySelectorAll(".app-name");
+  let userEmail = document.querySelectorAll('.acc-email');
+  let userName = document.querySelector('.acc-name');
+
+  async function getUserandAppDetails(){
+
+    const response = await fetch(`/oidc/oauth2/consent-info?consent_id=${consent_id}`, {method: "GET", headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${accessToken}`
+    }})
+
+    const result = await response.json();
+    // console.log(result);
+    if(response.ok){
+      userName.textContent = result.userName;
+      appName.forEach((app)=>{
+        app.textContent = result.appName;
+      });
+      userEmail.forEach((user)=>{
+        user.textContent = result.userEmail;
+      })
+    }
   }
+
 
   const continueBtn = document.getElementById('continue');
   const cancelBtn = document.getElementById('cancel');
 
   continueBtn.addEventListener('click', async ()=>{
-    const response = await fetch('/oidc/oauth2/consent', {method: "POST", headers: {
+    const response = await fetch('/oidc/oauth2/consent/accept', {method: "POST", headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${accessToken}`
-    }})
+    },
+    body: JSON.stringify({consent_id})
+    })
 
     const data = await response.json();
     console.log(data);
   })
 
-  // cancelBtn.addEventListener('click', ()=>{})
+
+  cancelBtn.addEventListener('click', async ()=>{
+    const response = await fetch('/oidc/oauth2/consent/deny', {method: "POST", headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${accessToken}`
+    },
+    body: JSON.stringify({consent_id})
+    })
+
+    const data = await response.json();
+    console.log(data);
+  })
 
 </script>
 
