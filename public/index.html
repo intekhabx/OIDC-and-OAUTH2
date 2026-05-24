@@ -6,121 +6,8 @@
 <title>Home</title>
 <link rel="icon" type="image/png" href="./images/logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="authenticate.css"/>
-
-<style>
-@media (max-width: 700px) {
-  .left {
-    display: flex !important;
-    width: 100% !important;
-    padding: 50px 20px !important;
-    text-align: center !important;
-  }
-
-  .card {
-    flex-direction: column !important;
-  }
-}
-
-  .cta-heading{
-    font-size:44px; 
-    margin-top:20px;
-  }
-
-  .cta-btn{
-    width: fit-content;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    margin-top: 20px;
-  }
-
-  .github-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  padding: 8px 14px;
-  border-radius: 20px;
-
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-
-  color: #fff;
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-
-  transition: all 0.25s ease;
-  backdrop-filter: blur(8px);
-}
-
-/* ICON */
-.github-icon {
-  width: 18px;
-  height: 18px;
-  fill: #ffffff;
-  transition: transform 0.25s ease, fill 0.25s ease;
-}
-
-/* HOVER EFFECT */
-.github-btn:hover {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(200, 75, 138, 0.4);
-}
-
-.github-btn:hover .github-icon {
-  transform: rotate(-10deg) scale(1.1);
-  fill: #c84b8a;
-}
-
-.login-btn{
-  padding:8px 14px; 
-  border-radius:20px;
-  background:linear-gradient(90deg,#c84b8a,#7c3aed);
-  color:#fff; text-decoration:none; font-size:13px; font-weight: 600;
-  cursor: pointer;
-}
-
-.login-btn:hover{
-    background:linear-gradient(90deg,#c43b7f,#602bbd);
-}
-
-.nav-logo{
-  display: flex;
-  gap: 8px;
-}
-
-.nav-logo .logo-box{
-  width: 25px;
-  height: 25px;
-  border-radius: 5px;
-}
-
-.nav-logo .sm{
-  width: 15px;
-}
-
-a{
-  text-decoration: none;
-}
-
-.logout{
-  padding:8px 14px; 
-  border-radius:20px;
-  border: none;
-  background-color: rgb(220, 56, 56);
-  font-weight: 600;
-  color: white;
-  cursor: pointer;
-}
-.logout:hover{
-  background-color: rgb(208, 23, 23);
-}
-.hide{
-  display: none;
-}
-</style>
-
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="main.css"/>
 </head>
 
 <body>
@@ -133,181 +20,730 @@ a{
 </div>
 
 <div class="page active">
+<div class="card" style="flex-direction:column;">
 
-  <div class="card" style="flex-direction:column;">
-
-    <!-- NAVBAR -->
-    <header style="display:flex; justify-content:space-between; align-items:center; padding:18px 24px; border-bottom:1px solid rgba(255,255,255,0.08);">
-
-      <!-- LOGO -->
-      <div class="nav-logo">
-        <div class="logo-box"></div>
-        <div class="logo-box sm"></div>
-      </div>
-
-      <!-- NAV ACTIONS -->
-      <nav style="display:flex; gap:12px; align-items:center;">
-
-        <!-- GitHub -->
-        <a class="github-btn" href="https://github.com/intekhabx" target="_blank">
-        <!-- simple github svg -->
-        <svg height="18" width="18" viewBox="0 0 24 24" fill="white">
+  <!-- ── NAVBAR ── -->
+  <header style="display:flex; justify-content:space-between; align-items:center; padding:18px 24px; border-bottom:1px solid rgba(255,255,255,0.08); position:sticky; top:0; z-index:100; backdrop-filter:blur(16px); background:rgba(0,0,0,0.3);">
+    <div class="nav-logo">
+      <div class="logo-box"></div>
+      <div class="logo-box sm"></div>
+    </div>
+    <nav style="display:flex; gap:12px; align-items:center;">
+      <a class="github-btn" href="https://github.com/intekhabx" target="_blank">
+        <svg height="18" width="18" viewBox="0 0 24 24" fill="white" class="github-icon">
           <path d="M12 .5C5.7.5.8 5.6.8 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2.2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.8.1-.8.1-.8 1.2.1 1.8 1.2 1.8 1.2 1.1 1.9 3 1.3 3.8 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.5.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A10.9 10.9 0 0 0 23.2 12C23.2 5.6 18.3.5 12 .5z"/>
         </svg>
         GitHub
       </a>
+      <a id="login-btn" href="/oidc/oauth2/authenticate" class="login-btn">Sign In</a>
+      <button id="logout-btn" class="logout hide">Logout</button>
+    </nav>
+  </header>
 
-        <!-- LOGIN -->
-        <a id="login-btn" href="/oidc/oauth2/authenticate" class="login-btn">
-          Sign In
-        </a>
-        <!-- LOGOUT -->
-        <button id="logout-btn" class="logout hide">
-          Logout
-        </button>
-
-      </nav>
-
-    </header>
-
-    <!-- HERO SECTION -->
-    <section class="left" style="width:100%; text-align:center; align-items:center; padding:60px 40px;">
-
-      <div class="nav-logo" style="justify-content:center;">
-        <div class="logo-box"></div>
-        <div class="logo-box sm"></div>
+  <!-- ── DOC TABS BAR ── -->
+  <div class="doc-tabs-bar">
+    <div class="doc-tabs">
+      <div class="doc-tab-group">
+        <a href="#overview"   class="sidebar-link active">Overview</a>
+        <a href="#quickstart" class="sidebar-link">Quick Start</a>
       </div>
-
-      <h1 class="cta-heading">
-        Secure Authentication<br>with OAuth2 & OIDC
-      </h1>
-
-      <p style="max-width:520px;">
-        Build secure authentication systems using OAuth 2.0 and OpenID Connect.
-        Manage user identity and authorization safely in modern applications.
-      </p>
-
-      <!-- HERO CTA -->
-        <button id="app-btn1" class="submit-btn cta-btn reg-btn">
-          Register Application
-        </button>
-
-    </section>
-
-    <!-- BLOG SECTION -->
-    <section class="right" style="width:100%;">
-
-      <header class="form-head">
-        <h2>What is OAuth 2.0 & OpenID Connect?</h2>
-        <p>Simple developer-friendly explanation</p>
-      </header>
-
-      <article style="color:rgba(210,175,245,0.75); font-size:14px; line-height:1.8;">
-
-        <p>
-          OAuth 2.0 is an authorization framework that allows applications to access user data without sharing passwords.
-        </p>
-
-        <p>
-          It works by issuing access tokens instead of exposing credentials directly.
-        </p>
-
-        <p>
-          OpenID Connect (OIDC) is built on top of OAuth 2.0 and adds authentication capabilities.
-        </p>
-
-        <p>
-          It allows applications to verify user identity in a secure and standardized way.
-        </p>
-
-      </article>
-
-      <button id="app-btn2" class="learn-btn reg-btn" style="margin-top:25px;">
-        Register Application →
-    </button>
-
-    </section>
-
+      <div class="doc-tab-sep"></div>
+      <div class="doc-tab-group">
+        <a href="#oauth2"     class="sidebar-link">OAuth 2.0</a>
+        <a href="#oidc"       class="sidebar-link">OpenID Connect</a>
+        <a href="#flow"       class="sidebar-link">Auth Code Flow</a>
+      </div>
+      <div class="doc-tab-sep"></div>
+      <div class="doc-tab-group">
+        <a href="#discovery"  class="sidebar-link">Discovery</a>
+        <a href="#endpoints"  class="sidebar-link">Endpoints</a>
+        <a href="#scopes"     class="sidebar-link">Scopes & Claims</a>
+        <a href="#tokens"     class="sidebar-link">Tokens</a>
+      </div>
+      <div class="doc-tab-sep"></div>
+      <div class="doc-tab-group">
+        <a href="#pkce"       class="sidebar-link" style="color:var(--doc-accent);">⬡ PKCE</a>
+      </div>
+    </div>
   </div>
 
-</div>
+  <!-- ── MAIN DOC LAYOUT ── -->
+  <div class="doc-layout">
+
+    <!-- CONTENT -->
+    <main style="flex:1; overflow-x:hidden;">
+
+      <!-- HERO -->
+      <div class="doc-hero" id="overview">
+        <div class="doc-hero-badge">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <circle cx="5" cy="5" r="4" fill="#c84b8a"/>
+          </svg>
+          v1.0 · OAuth 2.0 + OpenID Connect
+        </div>
+        <h1>Secure Authentication<br>with OAuth2 & OIDC</h1>
+        <p>Everything you need to integrate secure login, tokens, and user identity into your app — using standard OAuth 2.0 and OIDC protocols.</p>
+        <div class="doc-hero-actions">
+          <button id="app-btn1" class="submit-btn cta-btn reg-btn login-btn">Register Application</button>
+          <a href="#quickstart" class="github-btn" style="display:inline-flex;margin-top:4px;">Quick Start →</a>
+        </div>
+      </div>
+
+      <div class="doc-main">
+
+        <!-- ═══════════════════════════════════════
+             QUICK START
+        ═══════════════════════════════════════ -->
+        <section class="doc-section" id="quickstart">
+          <div class="doc-section-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Quick Start
+          </div>
+          <h2 class="doc-h2">Integrate in 4 Steps</h2>
+          <p class="doc-p">Start authenticating users in minutes. This guide covers the Authorization Code flow — the most secure and recommended way.</p>
+
+          <div class="qs-steps">
+
+            <div class="qs-step">
+              <div class="qs-num">1</div>
+              <div class="qs-content">
+                <h4>Register your application</h4>
+                <p>Go to the Developer Console and create an app. You'll get a <code style="font-family:var(--mono);color:#c084fc;font-size:12px;">client_id</code> and <code style="font-family:var(--mono);color:#c084fc;font-size:12px;">client_secret</code>.</p>
+                <button id="app-btn2" class="github-btn" style="display:inline-flex;margin-top:4px;">Open Developer Console →</>
+              </div>
+            </div>
+
+            <div class="qs-step">
+              <div class="qs-num">2</div>
+              <div class="qs-content">
+                <h4>Redirect user to authorization endpoint</h4>
+                <p>Send the user to our authorize URL with the required params.</p>
+                <div class="code-block">
+                  <div class="code-header"><span class="code-lang">URL</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+                  <pre>GET /oidc/oauth2/authorize
+  ?<span class="tok-prop">redirect_uri</span>=<span class="tok-str">https://yourapp.com/callback</span>
+  &amp;<span class="tok-prop">client_id</span>=<span class="tok-str">YOUR_CLIENT_ID</span>
+  &amp;<span class="tok-prop">state</span>=<span class="tok-str">random_csrf_token</span></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="qs-step">
+              <div class="qs-num">3</div>
+              <div class="qs-content">
+                <h4>Exchange code for tokens</h4>
+                <p>After login, user is redirected back with a <code style="font-family:var(--mono);color:#c084fc;font-size:12px;">code</code>. Exchange it for tokens.</p>
+                <div class="code-block">
+                  <div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+                  <pre><span class="tok-kw">const</span> response = <span class="tok-kw">await</span> <span class="tok-fn">fetch</span>(<span class="tok-str">'/oidc/oauth2/token'</span>, {
+  <span class="tok-prop">method</span>: <span class="tok-str">'POST'</span>,
+  <span class="tok-prop">headers</span>: { <span class="tok-str">'Content-Type'</span>: <span class="tok-str">'application/x-www-form-urlencoded'</span> },
+  <span class="tok-prop">body</span>: <span class="tok-kw">new</span> <span class="tok-fn">URLSearchParams</span>({
+    <span class="tok-prop">code</span>: authCode,          <span class="tok-cmt">// from redirect URL</span>
+    <span class="tok-prop">client_id</span>: <span class="tok-str">'YOUR_CLIENT_ID'</span>,
+    <span class="tok-prop">client_secret</span>: <span class="tok-str">'YOUR_CLIENT_SECRET'</span>,
+  })
+});
+
+<span class="tok-kw">const</span> { access_token, id_token, refresh_token } = <span class="tok-kw">await</span> response.<span class="tok-fn">json</span>();</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="qs-step">
+              <div class="qs-num">4</div>
+              <div class="qs-content">
+                <h4>Get user info</h4>
+                <p>Use the access token to fetch the logged-in user's profile.</p>
+                <div class="code-block">
+                  <div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+                  <pre><span class="tok-kw">const</span> user = <span class="tok-kw">await</span> <span class="tok-fn">fetch</span>(<span class="tok-str">'/oidc/oauth2/userinfo'</span>, {
+  <span class="tok-prop">headers</span>: { <span class="tok-str">'Authorization'</span>: <span class="tok-str">`Bearer ${access_token}`</span> }
+}).<span class="tok-fn">then</span>(r => r.<span class="tok-fn">json</span>());
+
+<span class="tok-cmt">// { sub, email, username, name, role }</span>
+console.<span class="tok-fn">log</span>(user.email);</pre>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+        <hr class="doc-divider">
+
+        <!-- ═══════════════════════════════════════
+             WHAT IS OAUTH 2.0
+        ═══════════════════════════════════════ -->
+        <section class="doc-section" id="oauth2">
+          <div class="doc-section-label">Core Concept</div>
+          <h2 class="doc-h2">What is OAuth 2.0?</h2>
+
+          <p class="doc-p">
+            OAuth 2.0 is an <strong style="color:#fff;">authorization</strong> framework. It lets your app access a user's data on their behalf — without ever knowing their password.
+          </p>
+          <p class="doc-p">
+            Think of it like a <strong style="color:#fff;">hotel key card</strong>. The hotel (authorization server) gives you a temporary card (access token) that opens only your room. You don't get a master key. The card expires. If you lose it, you get a new one — your actual credentials stay safe.
+          </p>
+
+          <div class="info-card note">
+            <strong>Authorization ≠ Authentication.</strong> OAuth 2.0 only answers <em>"what can this app do?"</em> — not <em>"who is this user?"</em>. For identity, you need OIDC (below).
+          </div>
+
+          <h3 class="doc-h3">Key Roles</h3>
+          <table class="ep-table">
+            <thead><tr><th>Role</th><th>Who it is</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td>Resource Owner</td><td>The user</td><td>Someone logging into your app</td></tr>
+              <tr><td>Client</td><td>Your application</td><td>Your web / mobile app</td></tr>
+              <tr><td>Authorization Server</td><td>This server</td><td>Handles login & issues tokens</td></tr>
+              <tr><td>Resource Server</td><td>The API</td><td>Userinfo endpoint, your protected API</td></tr>
+            </tbody>
+          </table>
+
+          <h3 class="doc-h3">Grant Types Supported</h3>
+          <p class="doc-p">Different ways an app can get tokens:</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px;">
+            <span class="tag">authorization_code</span>
+            <span class="tag">refresh_token</span>
+            <span class="tag">urn:ietf:params:oauth:grant-type:jwt-bearer</span>
+          </div>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Token Response</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+            <pre>{
+  <span class="tok-key">"access_token"</span>:  <span class="tok-str">"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."</span>,
+  <span class="tok-key">"token_type"</span>:    <span class="tok-str">"Bearer"</span>,
+  <span class="tok-key">"expires_in"</span>:    <span class="tok-num">3600</span>,
+  <span class="tok-key">"refresh_token"</span>: <span class="tok-str">"def50200abc..."</span>,
+  <span class="tok-key">"id_token"</span>:      <span class="tok-str">"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."</span>,
+  <span class="tok-key">"scope"</span>:         <span class="tok-str">"openid email profile"</span>
+}</pre>
+          </div>
+        </section>
+        <hr class="doc-divider">
+
+        <!-- ═══════════════════════════════════════
+             WHAT IS OIDC
+        ═══════════════════════════════════════ -->
+        <section class="doc-section" id="oidc">
+          <div class="doc-section-label">Core Concept</div>
+          <h2 class="doc-h2">What is OpenID Connect?</h2>
+
+          <p class="doc-p">
+            OpenID Connect (OIDC) is a thin identity layer on top of OAuth 2.0. It adds one key thing: an <strong style="color:#fff;">ID Token</strong> — a signed JWT that proves <em>who</em> the user is.
+          </p>
+          <p class="doc-p">
+            If OAuth 2.0 is the car key that opens the door, OIDC is the driver's license that proves who you are to begin with.
+          </p>
+
+          <div class="info-card tip">
+            <strong>Always request <code style="font-family:var(--mono);font-size:12px;">openid</code> scope</strong> to get an ID Token. Without it, you get OAuth 2.0 behaviour only — no identity info.
+          </div>
+
+          <h3 class="doc-h3">ID Token — What's inside?</h3>
+          <p class="doc-p">The ID token is a JWT (JSON Web Token) signed with <strong style="color:#fff;">RS256</strong>. You can verify it using our public keys at <code style="font-family:var(--mono);color:#86efac;font-size:12px;">/oidc/oauth2/certs</code>.</p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">JWT Payload (ID Token)</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+            <pre>{
+  <span class="tok-key">"iss"</span>:      <span class="tok-str">"https://your-issuer.com"</span>,       <span class="tok-cmt">// who issued this token</span>
+  <span class="tok-key">"sub"</span>:      <span class="tok-str">"user_abc123"</span>,               <span class="tok-cmt">// unique user ID</span>
+  <span class="tok-key">"aud"</span>:      <span class="tok-str">"your_client_id"</span>,             <span class="tok-cmt">// intended audience</span>
+  <span class="tok-key">"exp"</span>:      <span class="tok-num">1718000000</span>,                  <span class="tok-cmt">// expiry (unix timestamp)</span>
+  <span class="tok-key">"iat"</span>:      <span class="tok-num">1717996400</span>,                  <span class="tok-cmt">// issued at</span>
+  <span class="tok-key">"email"</span>:    <span class="tok-str">"user@example.com"</span>,
+  <span class="tok-key">"name"</span>:     <span class="tok-str">"Intekhab"</span>,
+  <span class="tok-key">"username"</span>: <span class="tok-str">"intekhabx"</span>,
+  <span class="tok-key">"role"</span>:     <span class="tok-str">"developer"</span>
+}</pre>
+          </div>
+
+          <div class="info-card warn">
+            <strong>Always verify the ID Token!</strong> Check <code style="font-family:var(--mono);font-size:12px;">iss</code>, <code style="font-family:var(--mono);font-size:12px;">aud</code>, and <code style="font-family:var(--mono);font-size:12px;">exp</code> before trusting any claim. Use our JWKS endpoint to get the public key.
+          </div>
+        </section>
+        <hr class="doc-divider">
+
+        <!-- ═══════════════════════════════════════
+             AUTH CODE FLOW
+        ═══════════════════════════════════════ -->
+        <section class="doc-section" id="flow">
+          <div class="doc-section-label">Core Concept</div>
+          <h2 class="doc-h2">Authorization Code Flow</h2>
+          <p class="doc-p">This is the standard, most secure flow. It keeps tokens out of the browser URL bar by using a short-lived code as an intermediary.</p>
+
+          <div class="flow">
+            <div class="flow-step">
+              <div class="flow-text"><strong>User clicks "Sign In"</strong> in your app.</div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-text">Your app redirects to <span class="flow-code">/oidc/oauth2/authorize</span> with <span class="flow-code">response_type=code</span>, <span class="flow-code">scope</span>, <span class="flow-code">client_id</span>, and a <span class="flow-code">state</span> value (for CSRF protection).</div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-text"><strong>User logs in</strong> on our server (credentials never touch your app).</div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-text">Server redirects back to your <span class="flow-code">redirect_uri</span> with a one-time <span class="flow-code">code</span> in the query params.</div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-text">Your backend exchanges the code at <span class="flow-code">/oidc/oauth2/token</span> using <span class="flow-code">client_id</span> + <span class="flow-code">client_secret</span>. <strong>This happens server-side — secret never exposed to browser.</strong></div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-text">You receive <span class="flow-code">access_token</span>, <span class="flow-code">id_token</span>, and <span class="flow-code">refresh_token</span>.</div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-text">Use <span class="flow-code">access_token</span> to call <span class="flow-code">/oidc/oauth2/userinfo</span> or your own protected APIs.</div>
+            </div>
+          </div>
+
+          <div class="code-block" style="margin-top:24px;">
+            <div class="code-header"><span class="code-lang">Node.js — Full Flow Example</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+            <pre><span class="tok-cmt">// Step 1: Build authorize URL</span>
+<span class="tok-kw">const</span> params = <span class="tok-kw">new</span> <span class="tok-fn">URLSearchParams</span>({
+  response_type: <span class="tok-str">'code'</span>,
+  client_id:     process.env.<span class="tok-prop">CLIENT_ID</span>,
+  redirect_uri:  <span class="tok-str">'https://yourapp.com/callback'</span>,
+  scope:         <span class="tok-str">'openid email profile'</span>,
+  state:         <span class="tok-fn">generateRandomState</span>(),
+});
+res.<span class="tok-fn">redirect</span>(<span class="tok-str">`https://issuer.com/oidc/oauth2/authorize?${params}`</span>);
+
+<span class="tok-cmt">// Step 2: Handle callback route</span>
+app.<span class="tok-fn">get</span>(<span class="tok-str">'/callback'</span>, <span class="tok-kw">async</span> (req, res) => {
+  <span class="tok-kw">const</span> { code, state } = req.query;
+  <span class="tok-fn">verifyState</span>(state);  <span class="tok-cmt">// must match what you stored</span>
+
+  <span class="tok-kw">const</span> tokenRes = <span class="tok-kw">await</span> <span class="tok-fn">fetch</span>(<span class="tok-str">'https://issuer.com/oidc/oauth2/token'</span>, {
+    method: <span class="tok-str">'POST'</span>,
+    headers: { <span class="tok-str">'Content-Type'</span>: <span class="tok-str">'application/x-www-form-urlencoded'</span> },
+    body: <span class="tok-kw">new</span> <span class="tok-fn">URLSearchParams</span>({
+      grant_type:    <span class="tok-str">'authorization_code'</span>,
+      code,
+      client_id:     process.env.<span class="tok-prop">CLIENT_ID</span>,
+      client_secret: process.env.<span class="tok-prop">CLIENT_SECRET</span>,
+      redirect_uri:  <span class="tok-str">'https://yourapp.com/callback'</span>,
+    }),
+  });
+  <span class="tok-kw">const</span> tokens = <span class="tok-kw">await</span> tokenRes.<span class="tok-fn">json</span>();
+  <span class="tok-cmt">// store tokens securely in session / httpOnly cookie</span>
+});</pre>
+          </div>
+        </section>
+        <hr class="doc-divider">
+
+        <!-- ═══════════════════════════════════════
+             DISCOVERY DOCUMENT
+        ═══════════════════════════════════════ -->
+        <section class="doc-section" id="discovery">
+          <div class="doc-section-label">Reference</div>
+          <h2 class="doc-h2">Discovery Document</h2>
+          <p class="doc-p">
+            The discovery document (<code style="font-family:var(--mono);color:#86efac;font-size:12px;">/.well-known/openid-configuration</code>) is a standard OIDC endpoint that describes all our server's capabilities. Most OIDC libraries auto-discover configuration from here.
+          </p>
+
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">GET /.well-known/openid-configuration</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+            <pre>{
+  <span class="tok-key">"issuer"</span>:                                <span class="tok-str">"https://your-issuer.com"</span>,
+  <span class="tok-key">"authorization_endpoint"</span>:               <span class="tok-str">"https://your-issuer.com/oidc/oauth2/authorize"</span>,
+  <span class="tok-key">"token_endpoint"</span>:                        <span class="tok-str">"https://your-issuer.com/oidc/oauth2/token"</span>,
+  <span class="tok-key">"userinfo_endpoint"</span>:                    <span class="tok-str">"https://your-issuer.com/oidc/oauth2/userinfo"</span>,
+  <span class="tok-key">"jwks_uri"</span>:                             <span class="tok-str">"https://your-issuer.com/oidc/oauth2/certs"</span>,
+  <span class="tok-key">"revocation_endpoint"</span>:                  <span class="tok-str">"https://your-issuer.com/oidc/oauth2/revoke"</span>,
+  <span class="tok-key">"end_session_endpoint"</span>:                 <span class="tok-str">"https://your-issuer.com/logout"</span>,
+  <span class="tok-key">"developer_console"</span>:                    <span class="tok-str">"https://your-issuer.com/api/developer-console"</span>,
+
+  <span class="tok-key">"response_types_supported"</span>:             [<span class="tok-str">"code"</span>],
+  <span class="tok-key">"response_modes_supported"</span>:             [<span class="tok-str">"query"</span>, <span class="tok-str">"form_post"</span>],
+  <span class="tok-key">"subject_types_supported"</span>:             [<span class="tok-str">"public"</span>],
+  <span class="tok-key">"id_token_signing_alg_values_supported"</span>: [<span class="tok-str">"RS256"</span>],
+
+  <span class="tok-key">"scopes_supported"</span>:                     [<span class="tok-str">"openid"</span>, <span class="tok-str">"email"</span>, <span class="tok-str">"profile"</span>],
+  <span class="tok-key">"claims_supported"</span>: [
+    <span class="tok-str">"sub"</span>, <span class="tok-str">"email"</span>, <span class="tok-str">"username"</span>, <span class="tok-str">"name"</span>, <span class="tok-str">"role"</span>, <span class="tok-str">"aud"</span>, <span class="tok-str">"iss"</span>
+  ],
+  <span class="tok-key">"token_endpoint_auth_methods_supported"</span>: [
+    <span class="tok-str">"client_secret_post"</span>, <span class="tok-str">"client_secret_basic"</span>
+  ],
+  <span class="tok-key">"grant_types_supported"</span>: [
+    <span class="tok-str">"authorization_code"</span>,
+    <span class="tok-str">"refresh_token"</span>,
+    <span class="tok-str">"urn:ietf:params:oauth:grant-type:jwt-bearer"</span>
+  ]
+}</pre>
+          </div>
+        </section>
+        <hr class="doc-divider">
+
+        <!-- ═══════════════════════════════════════
+             ENDPOINTS
+        ═══════════════════════════════════════ -->
+        <section class="doc-section" id="endpoints">
+          <div class="doc-section-label">Reference</div>
+          <h2 class="doc-h2">Endpoints</h2>
+
+          <table class="ep-table">
+            <thead>
+              <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="method get">GET</span></td>
+                <td>/.well-known/openid-configuration</td>
+                <td>OIDC discovery document</td>
+              </tr>
+              <tr>
+                <td><span class="method get">GET</span></td>
+                <td>/oidc/oauth2/authorize</td>
+                <td>Start authorization — redirects user to login page</td>
+              </tr>
+              <tr>
+                <td><span class="method post">POST</span></td>
+                <td>/oidc/oauth2/token</td>
+                <td>Exchange code → tokens. Also use for refresh_token grant.</td>
+              </tr>
+              <tr>
+                <td><span class="method get">GET</span></td>
+                <td>/oidc/oauth2/userinfo</td>
+                <td>Get profile of logged-in user. Requires Bearer token.</td>
+              </tr>
+              <tr>
+                <td><span class="method get">GET</span></td>
+                <td>/oidc/oauth2/certs</td>
+                <td>JWKS — public keys for verifying JWTs</td>
+              </tr>
+              <tr>
+                <td><span class="method post">POST</span></td>
+                <td>/oidc/oauth2/revoke</td>
+                <td>Revoke an access token or refresh token</td>
+              </tr>
+              <tr>
+                <td><span class="method get">GET</span></td>
+                <td>/logout</td>
+                <td>End the user session (end_session_endpoint)</td>
+              </tr>
+              <tr>
+                <td><span class="method get">GET</span></td>
+                <td>/api/developer-console</td>
+                <td>Manage your OAuth applications</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 class="doc-h3">Refresh Token</h3>
+          <p class="doc-p">When the access token expires (1 hour), use the refresh token to get a new one without asking the user to log in again.</p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">JavaScript — Refresh Token</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+            <pre><span class="tok-kw">const</span> response = <span class="tok-kw">await</span> <span class="tok-fn">fetch</span>(<span class="tok-str">'/oidc/oauth2/token'</span>, {
+  <span class="tok-prop">method</span>: <span class="tok-str">'POST'</span>,
+  <span class="tok-prop">headers</span>: { <span class="tok-str">'Content-Type'</span>: <span class="tok-str">'application/x-www-form-urlencoded'</span> },
+  <span class="tok-prop">body</span>: <span class="tok-kw">new</span> <span class="tok-fn">URLSearchParams</span>({
+    <span class="tok-prop">grant_type</span>:    <span class="tok-str">'refresh_token'</span>,
+    <span class="tok-prop">refresh_token</span>: storedRefreshToken,
+    <span class="tok-prop">client_id</span>:     <span class="tok-str">'YOUR_CLIENT_ID'</span>,
+    <span class="tok-prop">client_secret</span>: <span class="tok-str">'YOUR_CLIENT_SECRET'</span>,
+  })
+});
+<span class="tok-kw">const</span> { access_token, refresh_token } = <span class="tok-kw">await</span> response.<span class="tok-fn">json</span>();
+<span class="tok-cmt">// store new refresh_token — old one is now invalid</span></pre>
+          </div>
+
+          <h3 class="doc-h3">Verify JWT (ID Token / Access Token)</h3>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Node.js — Verify with JWKS</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+            <pre><span class="tok-kw">import</span> { createRemoteJWKSet, jwtVerify } <span class="tok-kw">from</span> <span class="tok-str">'jose'</span>;
+
+<span class="tok-kw">const</span> JWKS = <span class="tok-fn">createRemoteJWKSet</span>(
+  <span class="tok-kw">new</span> <span class="tok-fn">URL</span>(<span class="tok-str">'https://your-issuer.com/oidc/oauth2/certs'</span>)
+);
+
+<span class="tok-kw">const</span> { payload } = <span class="tok-kw">await</span> <span class="tok-fn">jwtVerify</span>(idToken, JWKS, {
+  <span class="tok-prop">issuer</span>:   <span class="tok-str">'https://your-issuer.com'</span>,
+  <span class="tok-prop">audience</span>: <span class="tok-str">'YOUR_CLIENT_ID'</span>,
+});
+
+console.<span class="tok-fn">log</span>(payload.sub);    <span class="tok-cmt">// user ID</span>
+console.<span class="tok-fn">log</span>(payload.email);  <span class="tok-cmt">// user email</span></pre>
+          </div>
+        </section>
+        <hr class="doc-divider">
+
+        <!-- ═══════════════════════════════════════
+             SCOPES & CLAIMS
+        ═══════════════════════════════════════ -->
+        <section class="doc-section" id="scopes">
+          <div class="doc-section-label">Reference</div>
+          <h2 class="doc-h2">Scopes & Claims</h2>
+          <p class="doc-p">Scopes control what data your app can access. Claims are the actual fields returned.</p>
+
+          <h3 class="doc-h3">Scopes</h3>
+          <table class="ep-table">
+            <thead><tr><th>Scope</th><th>What it unlocks</th></tr></thead>
+            <tbody>
+              <tr><td><span class="tag">openid</span></td><td>Required. Enables OIDC — gives you an ID token with <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">sub</code>.</td></tr>
+              <tr><td><span class="tag">email</span></td><td>Adds <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">email</code> claim to the ID token and userinfo.</td></tr>
+              <tr><td><span class="tag">profile</span></td><td>Adds <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">name</code>, <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">username</code>, <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">role</code> to userinfo.</td></tr>
+            </tbody>
+          </table>
+
+          <h3 class="doc-h3">Claims</h3>
+          <div class="claims-grid">
+            <div class="claim-card"><div class="claim-name">sub</div><div class="claim-desc">Unique user identifier. Never changes.</div></div>
+            <div class="claim-card"><div class="claim-name">email</div><div class="claim-desc">User's email address.</div></div>
+            <div class="claim-card"><div class="claim-name">username</div><div class="claim-desc">Display / login username.</div></div>
+            <div class="claim-card"><div class="claim-name">name</div><div class="claim-desc">Full name of the user.</div></div>
+            <div class="claim-card"><div class="claim-name">role</div><div class="claim-desc">User's role in the system.</div></div>
+            <div class="claim-card"><div class="claim-name">iss</div><div class="claim-desc">Token issuer URL.</div></div>
+            <div class="claim-card"><div class="claim-name">aud</div><div class="claim-desc">Audience — your client_id.</div></div>
+          </div>
+        </section>
+        <hr class="doc-divider">
+
+        <!-- ═══════════════════════════════════════
+             TOKENS
+        ═══════════════════════════════════════ -->
+        <section class="doc-section" id="tokens">
+          <div class="doc-section-label">Reference</div>
+          <h2 class="doc-h2">Token Types</h2>
+
+          <table class="ep-table">
+            <thead><tr><th>Token</th><th>Format</th><th>Lifetime</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong style="color:#fff;">Access Token</strong></td>
+                <td><span class="tag">JWT</span></td>
+                <td>~1 hour</td>
+                <td>Call protected APIs. Send as <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">Authorization: Bearer &lt;token&gt;</code></td>
+              </tr>
+              <tr>
+                <td><strong style="color:#fff;">ID Token</strong></td>
+                <td><span class="tag">JWT</span></td>
+                <td>~1 hour</td>
+                <td>Verify user identity. Contains user claims. Signed with RS256.</td>
+              </tr>
+              <tr>
+                <td><strong style="color:#fff;">Refresh Token</strong></td>
+                <td><span class="tag">Opaque</span></td>
+                <td>Days / weeks</td>
+                <td>Get new access tokens. Store securely. Rotate after each use.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="info-card warn">
+            <strong>Never store tokens in localStorage.</strong> Use <code style="font-family:var(--mono);font-size:12px;">httpOnly</code> cookies for refresh tokens on the server. For SPAs, keep access tokens in memory only.
+          </div>
+        </section>
+        <hr class="doc-divider">
+
+        <!-- ═══════════════════════════════════════
+             PKCE — FUTURE
+        ═══════════════════════════════════════ -->
+        <section class="doc-section" id="pkce">
+          <div class="doc-section-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            Future Improvement
+          </div>
+          <h2 class="doc-h2">PKCE — Proof Key for Code Exchange</h2>
+
+          <div class="info-card future">
+            <strong>🚧 Not yet implemented.</strong> PKCE support is planned for pure frontend / SPA use-cases where there is no backend server to keep the <code style="font-family:var(--mono);font-size:12px;">client_secret</code> safe.
+          </div>
+
+          <p class="doc-p">
+            PKCE (pronounced "pixy") is a security extension to the Authorization Code flow. It was originally designed for mobile apps, but today it's the <strong style="color:#fff;">recommended approach for any public client</strong> — browser-only SPAs, mobile apps, CLI tools — where you <em>cannot</em> safely store a client secret.
+          </p>
+
+          <h3 class="doc-h3">Why do we need PKCE?</h3>
+          <p class="doc-p">
+            In the standard flow, your backend uses a <code style="font-family:var(--mono);color:#c084fc;font-size:12px;">client_secret</code> to prove it's really your app when exchanging the authorization code. But in a pure frontend app, any secret you put in the JavaScript source code is <strong style="color:#fff;">visible to anyone</strong> who opens DevTools. PKCE replaces the secret with a one-time cryptographic proof.
+          </p>
+
+          <div class="future-card">
+            <h3>Step 1 — Generate <code style="font-family:var(--mono);font-size:14px;">code_verifier</code></h3>
+            <p>The <strong>code_verifier</strong> is a random, high-entropy string (43–128 characters) generated by your app at the start of each login attempt. It's like a temporary secret that only lives in memory for one login session.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre><span class="tok-cmt">// Generate a random code_verifier</span>
+<span class="tok-kw">function</span> <span class="tok-fn">generateCodeVerifier</span>() {
+  <span class="tok-kw">const</span> array = <span class="tok-kw">new</span> <span class="tok-fn">Uint8Array</span>(<span class="tok-num">32</span>);
+  crypto.<span class="tok-fn">getRandomValues</span>(array);
+  <span class="tok-kw">return</span> <span class="tok-fn">btoa</span>(<span class="tok-fn">String</span>.<span class="tok-fn">fromCharCode</span>(...array))
+    .<span class="tok-fn">replace</span>(<span class="tok-str">/\+/g</span>, <span class="tok-str">'-'</span>)
+    .<span class="tok-fn">replace</span>(<span class="tok-str">/\//g</span>, <span class="tok-str">'_'</span>)
+    .<span class="tok-fn">replace</span>(<span class="tok-str">/=/g</span>,  <span class="tok-str">''</span>);
+}
+
+<span class="tok-kw">const</span> codeVerifier = <span class="tok-fn">generateCodeVerifier</span>();
+<span class="tok-cmt">// Example: "dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"</span>
+<span class="tok-cmt">// Store in sessionStorage — needed after redirect</span>
+sessionStorage.<span class="tok-fn">setItem</span>(<span class="tok-str">'pkce_verifier'</span>, codeVerifier);</pre>
+            </div>
+          </div>
+
+          <div class="future-card">
+            <h3>Step 2 — Derive <code style="font-family:var(--mono);font-size:14px;">code_challenge</code></h3>
+            <p>The <strong>code_challenge</strong> is a SHA-256 hash of the code_verifier, then Base64url-encoded. You send this to the authorization server at the start. The verifier stays secret; only the challenge (a hash) is sent in the URL.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre><span class="tok-kw">async function</span> <span class="tok-fn">generateCodeChallenge</span>(verifier) {
+  <span class="tok-kw">const</span> data    = <span class="tok-kw">new</span> <span class="tok-fn">TextEncoder</span>().<span class="tok-fn">encode</span>(verifier);
+  <span class="tok-kw">const</span> hash    = <span class="tok-kw">await</span> crypto.subtle.<span class="tok-fn">digest</span>(<span class="tok-str">'SHA-256'</span>, data);
+  <span class="tok-kw">const</span> bytes   = <span class="tok-kw">new</span> <span class="tok-fn">Uint8Array</span>(hash);
+  <span class="tok-kw">return</span> <span class="tok-fn">btoa</span>(<span class="tok-fn">String</span>.<span class="tok-fn">fromCharCode</span>(...bytes))
+    .<span class="tok-fn">replace</span>(<span class="tok-str">/\+/g</span>, <span class="tok-str">'-'</span>)
+    .<span class="tok-fn">replace</span>(<span class="tok-str">/\//g</span>, <span class="tok-str">'_'</span>)
+    .<span class="tok-fn">replace</span>(<span class="tok-str">/=/g</span>,  <span class="tok-str">''</span>);
+}
+
+<span class="tok-kw">const</span> codeChallenge = <span class="tok-kw">await</span> <span class="tok-fn">generateCodeChallenge</span>(codeVerifier);
+<span class="tok-cmt">// Example: "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM"</span></pre>
+            </div>
+
+            <!-- Visual diagram -->
+            <div class="pkce-box">
+              <div class="pkce-item">
+                <div class="pkce-item-label">code_verifier (secret)</div>
+                <div class="pkce-item-val">dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk</div>
+              </div>
+              <div class="pkce-arrow">→<br><span style="font-size:10px;font-family:var(--mono);color:var(--doc-muted);">SHA-256<br>+ base64url</span><br>→</div>
+              <div class="pkce-item">
+                <div class="pkce-item-label">code_challenge (sent in URL)</div>
+                <div class="pkce-item-val">E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="future-card">
+            <h3>Step 3 — Send challenge with authorize request</h3>
+            <p>Include the challenge and method in the initial redirect. No <code style="font-family:var(--mono);font-size:13px;">client_secret</code> needed!</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">URL</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre>GET /oidc/oauth2/authorize
+  ?<span class="tok-prop">response_type</span>=<span class="tok-str">code</span>
+  &amp;<span class="tok-prop">client_id</span>=<span class="tok-str">YOUR_CLIENT_ID</span>
+  &amp;<span class="tok-prop">redirect_uri</span>=<span class="tok-str">https://yourapp.com/callback</span>
+  &amp;<span class="tok-prop">scope</span>=<span class="tok-str">openid email profile</span>
+  &amp;<span class="tok-prop">code_challenge</span>=<span class="tok-str">E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM</span>
+  &amp;<span class="tok-prop">code_challenge_method</span>=<span class="tok-str">S256</span>   <span class="tok-cmt">&lt;-- always S256, not plain</span>
+  &amp;<span class="tok-prop">state</span>=<span class="tok-str">random_csrf_token</span></pre>
+            </div>
+          </div>
+
+          <div class="future-card">
+            <h3>Step 4 — Exchange code using verifier (no secret!)</h3>
+            <p>When exchanging the code for tokens, send the <code style="font-family:var(--mono);font-size:13px;">code_verifier</code> instead of a <code style="font-family:var(--mono);font-size:13px;">client_secret</code>. The server verifies the hash matches the challenge it stored.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">JavaScript — PKCE Token Exchange</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+              <pre><span class="tok-kw">const</span> codeVerifier = sessionStorage.<span class="tok-fn">getItem</span>(<span class="tok-str">'pkce_verifier'</span>);
+
+<span class="tok-kw">const</span> response = <span class="tok-kw">await</span> <span class="tok-fn">fetch</span>(<span class="tok-str">'/oidc/oauth2/token'</span>, {
+  <span class="tok-prop">method</span>: <span class="tok-str">'POST'</span>,
+  <span class="tok-prop">headers</span>: { <span class="tok-str">'Content-Type'</span>: <span class="tok-str">'application/x-www-form-urlencoded'</span> },
+  <span class="tok-prop">body</span>: <span class="tok-kw">new</span> <span class="tok-fn">URLSearchParams</span>({
+    <span class="tok-prop">grant_type</span>:    <span class="tok-str">'authorization_code'</span>,
+    <span class="tok-prop">code</span>:          authCode,
+    <span class="tok-prop">client_id</span>:     <span class="tok-str">'YOUR_CLIENT_ID'</span>,
+    <span class="tok-prop">redirect_uri</span>:  <span class="tok-str">'https://yourapp.com/callback'</span>,
+    <span class="tok-prop">code_verifier</span>: codeVerifier, <span class="tok-cmt">// &lt;-- this is the proof, no secret needed</span>
+  })
+});
+<span class="tok-cmt">// server hashes codeVerifier, compares with stored code_challenge</span>
+<span class="tok-cmt">// if they match → tokens issued. If not → 400 error.</span></pre>
+            </div>
+          </div>
+
+          <h3 class="doc-h3">Why is this secure?</h3>
+          <p class="doc-p">Even if an attacker intercepts the authorization code from the redirect URL, they can't exchange it — because they don't have the <code style="font-family:var(--mono);color:#c084fc;font-size:12px;">code_verifier</code>. Only your app that generated it can complete the exchange. The hash (challenge) is useless without the original random string.</p>
+
+          <div class="info-card tip">
+            <strong>When PKCE is implemented</strong>, you'll be able to build a complete login flow entirely in the browser — no backend server required. Perfect for static site deployments on Vercel, Netlify, GitHub Pages, etc.
+          </div>
+        </section>
+
+      </div><!-- /doc-main -->
+    </main>
+  </div><!-- /doc-layout -->
+
+</div><!-- /card -->
+</div><!-- /page -->
 
 
 <script type="module">
   import {renewAccessTokenAndRefreshToken} from "./refresh-token.js"
   let accessToken;
 
-  // login se jbv redirect hoga ye call hoga aur token laayega
   (async function (){
     accessToken = await renewAccessTokenAndRefreshToken();
-    if(accessToken){
-      showLogoutBtn();
-    }
+    if(accessToken){ showLogoutBtn(); }
   })();
 
-  // verify access token route bana pehle accesstoken verify krke logout button dikhana chahiye but aise hi dikha dete hai
   const logoutBtn = document.getElementById('logout-btn');
-  const loginBtn = document.getElementById('login-btn');
+  const loginBtn  = document.getElementById('login-btn');
 
   function showLogoutBtn(){
-    if(!(accessToken && accessToken?.trim())){
-      return;
-    }
-
+    if(!(accessToken && accessToken?.trim())) return;
     logoutBtn.classList.remove('hide');
-    loginBtn.classList.add('hide')
+    loginBtn.classList.add('hide');
   }
   showLogoutBtn();
 
-
-  logoutBtn.addEventListener('click', async (e)=>{
-    const isOk = confirm("Are you want to logout")
-    if(!isOk){
-      return;
-    }
-    
-    const response = await fetch("/api/auth/logout", {method: "POST", 
-    headers: {
-      "Authorization": `Bearer ${accessToken}`
-    }
+  logoutBtn.addEventListener('click', async () => {
+    const isOk = confirm("Are you want to logout");
+    if(!isOk) return;
+    const response = await fetch("/api/auth/logout", {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${accessToken}` }
     });
-
     if(response.ok){
       accessToken = "";
       alert("you are logged-out");
       logoutBtn.classList.add('hide');
-      loginBtn.classList.remove('hide')
-    }
-    else{
+      loginBtn.classList.remove('hide');
+    } else {
       alert("something went wrong");
     }
-  })
+  });
 
-
-
-  // application form
-  const applicationBtn1 = document.getElementById('app-btn1').addEventListener('click', openRegisterApplicationPage)
-  const applicationBtn2 = document.getElementById('app-btn2').addEventListener('click', openRegisterApplicationPage);
-
-  async function openRegisterApplicationPage(e){
+  async function openRegisterApplicationPage(){
     if(!(accessToken && accessToken?.trim())){
-      window.location.href = "/oidc/oauth2/authenticate"
+      window.location.href = "/oidc/oauth2/authenticate";
       return;
     }
-    // console.log(accessToken)
-    window.location.href = "/api/developer-console"
-
-    // const response = await fetch('/api/developer-console', {method: "GET", headers: {
-    //   "Authorization": `Bearer ${accessToken}`
-    // }});
-
-    // if(response.ok){
-    //   window.location.href = "/api/developer-console"
-    // }
-    // else{
-    //   window.location.href = "/oidc/oauth2/authenticate";
-    // }
+    window.location.href = "/api/developer-console";
   }
+
+  document.getElementById('app-btn1').addEventListener('click', openRegisterApplicationPage);
+  document.getElementById('app-btn2').addEventListener("click", openRegisterApplicationPage);
 </script>
+
+<script>
+  // ── Copy button ──
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'copied!';
+      setTimeout(() => btn.textContent = 'copy', 1800);
+    });
+  }
+
+  // ── Sidebar active link on scroll ──
+  const sections = document.querySelectorAll('.doc-section, #overview');
+  const links    = document.querySelectorAll('.sidebar-link');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        links.forEach(l => l.classList.remove('active'));
+        const id = entry.target.id;
+        const active = document.querySelector(`.sidebar-link[href="#${id}"]`);
+        if(active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.25 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
 </body>
 </html>

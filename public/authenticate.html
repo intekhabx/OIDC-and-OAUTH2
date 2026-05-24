@@ -6,7 +6,7 @@
 <title>Authenticate YourSelf</title>
 <link rel="icon" type="image/png" href="./images/logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="authenticate.css">
+<link rel="stylesheet" href="main.css">
 <style>
 
   .hide{
@@ -198,6 +198,16 @@
       })
   }
 
+  function getQueryParmas(){
+    const paramsObj = {}
+    const queryParmas = new URLSearchParams(window.location.search);
+    // URLSearchParams forEach is some different
+    queryParmas.forEach((value, key)=>{
+      paramsObj[key] = value
+    })
+    return paramsObj;
+  }
+
   registerForm.addEventListener('submit', async (e)=>{
     e.preventDefault();
     
@@ -213,6 +223,9 @@
       return;
     }
 
+    const queryParams = getQueryParmas();
+    const query = `redirect_url=${queryParams.redirect_url}&client_id=${queryParams.client_id}&state=${queryParams.state}`;
+
     const response = await fetch('/api/auth/register', {method: "POST", 
     headers: {
       "Content-Type": "application/json"
@@ -225,7 +238,7 @@
     if(response.ok){
       const message = "Redirecting to Login ✅️"
       await showSuccessNote(message, regSuccessTag);
-      window.location.href = '/oidc/oauth2/authenticate';
+      window.location.href = `/oidc/oauth2/authenticate?${query}`;
     }
     else{
       const message = data.message || data.error[0]?.message|| data.data.message || "Error";
@@ -240,6 +253,9 @@
     const identifier = document.getElementById('email-username').value;
     const password = document.getElementById('log-password').value;
 
+    const queryParams = getQueryParmas();
+    const query = `redirect_url=${queryParams.redirect_url}&client_id=${queryParams.client_id}&state=${queryParams.state}`;
+
     const response = await fetch("/api/auth/login", {method: "POST", 
     headers: {
       "Content-Type": "application/json",
@@ -250,9 +266,14 @@
     const data = await response.json();
 
     if(response.ok){
-      const message = "Logged In✅️ - redirecting to home page";
+      if(queryParams.redirect_url === "undefined" || queryParams.client_id === "undefined" || queryParams.state === "undefined"){
+        const message = "Logged In✅️ - redirecting to home page";
+        await showSuccessNote(message, logSuccessTag);
+        window.location.href = "/"
+      }
+      const message = "redirecting-↗️";
       await showSuccessNote(message, logSuccessTag);
-      window.location.href = "/"
+      window.location.href = `/oidc/oauth2/authorize?${query}`;
     }
     else{
       const message = data.message || data.error[0]?.message|| data.data.message || "Error";
