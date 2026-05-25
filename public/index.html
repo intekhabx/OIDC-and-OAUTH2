@@ -142,10 +142,11 @@
     <span class="tok-prop">code</span>: authCode,          <span class="tok-cmt">// from redirect URL</span>
     <span class="tok-prop">client_id</span>: <span class="tok-str">'YOUR_CLIENT_ID'</span>,
     <span class="tok-prop">client_secret</span>: <span class="tok-str">'YOUR_CLIENT_SECRET'</span>,
+    <span class="tok-prop">grant_type</span>: <span class="tok-str">'authorization_code'</span>,
   })
 });
 
-<span class="tok-kw">const</span> { access_token, id_token, refresh_token } = <span class="tok-kw">await</span> response.<span class="tok-fn">json</span>();</pre>
+<span class="tok-kw">const</span> { accessToken, refreshToken , tokenType: "Bearer"} = <span class="tok-kw">await</span> response.<span class="tok-fn">json</span>();</pre>
                 </div>
               </div>
             </div>
@@ -161,7 +162,7 @@
   <span class="tok-prop">headers</span>: { <span class="tok-str">'Authorization'</span>: <span class="tok-str">`Bearer ${access_token}`</span> }
 }).<span class="tok-fn">then</span>(r => r.<span class="tok-fn">json</span>());
 
-<span class="tok-cmt">// { sub, email, username, name, role }</span>
+<span class="tok-cmt">// { sub, email, name, exp }</span>
 console.<span class="tok-fn">log</span>(user.email);</pre>
                 </div>
               </div>
@@ -205,7 +206,6 @@ console.<span class="tok-fn">log</span>(user.email);</pre>
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px;">
             <span class="tag">authorization_code</span>
             <span class="tag">refresh_token</span>
-            <span class="tag">urn:ietf:params:oauth:grant-type:jwt-bearer</span>
           </div>
 
           <div class="code-block">
@@ -213,9 +213,8 @@ console.<span class="tok-fn">log</span>(user.email);</pre>
             <pre>{
   <span class="tok-key">"access_token"</span>:  <span class="tok-str">"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."</span>,
   <span class="tok-key">"token_type"</span>:    <span class="tok-str">"Bearer"</span>,
-  <span class="tok-key">"expires_in"</span>:    <span class="tok-num">3600</span>,
+  <span class="tok-key">"expires_in"</span>:    <span class="tok-num">"15m"</span>,
   <span class="tok-key">"refresh_token"</span>: <span class="tok-str">"def50200abc..."</span>,
-  <span class="tok-key">"id_token"</span>:      <span class="tok-str">"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9..."</span>,
   <span class="tok-key">"scope"</span>:         <span class="tok-str">"openid email profile"</span>
 }</pre>
           </div>
@@ -246,15 +245,12 @@ console.<span class="tok-fn">log</span>(user.email);</pre>
           <div class="code-block">
             <div class="code-header"><span class="code-lang">JWT Payload (ID Token)</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
             <pre>{
-  <span class="tok-key">"iss"</span>:      <span class="tok-str">"https://your-issuer.com"</span>,       <span class="tok-cmt">// who issued this token</span>
+  <span class="tok-key">"iss"</span>:      <span class="tok-str">"https://intekhabx-auth.com"</span>,       <span class="tok-cmt">// who issued this token</span>
   <span class="tok-key">"sub"</span>:      <span class="tok-str">"user_abc123"</span>,               <span class="tok-cmt">// unique user ID</span>
   <span class="tok-key">"aud"</span>:      <span class="tok-str">"your_client_id"</span>,             <span class="tok-cmt">// intended audience</span>
   <span class="tok-key">"exp"</span>:      <span class="tok-num">1718000000</span>,                  <span class="tok-cmt">// expiry (unix timestamp)</span>
-  <span class="tok-key">"iat"</span>:      <span class="tok-num">1717996400</span>,                  <span class="tok-cmt">// issued at</span>
   <span class="tok-key">"email"</span>:    <span class="tok-str">"user@example.com"</span>,
-  <span class="tok-key">"name"</span>:     <span class="tok-str">"Intekhab"</span>,
-  <span class="tok-key">"username"</span>: <span class="tok-str">"intekhabx"</span>,
-  <span class="tok-key">"role"</span>:     <span class="tok-str">"developer"</span>
+  <span class="tok-key">"name"</span>:     <span class="tok-str">"User"</span>,
 }</pre>
           </div>
 
@@ -277,57 +273,25 @@ console.<span class="tok-fn">log</span>(user.email);</pre>
               <div class="flow-text"><strong>User clicks "Sign In"</strong> in your app.</div>
             </div>
             <div class="flow-step">
-              <div class="flow-text">Your app redirects to <span class="flow-code">/oidc/oauth2/authorize</span> with <span class="flow-code">response_type=code</span>, <span class="flow-code">scope</span>, <span class="flow-code">client_id</span>, and a <span class="flow-code">state</span> value (for CSRF protection).</div>
+              <div class="flow-text">Your app redirects to <span class="flow-code">/oidc/oauth2/authorize</span> with <span class="flow-code">client_id</span>, <span class="flow-code">redirect_url</span>, and a <span class="flow-code">state</span> value (for CSRF protection).</div>
             </div>
             <div class="flow-step">
               <div class="flow-text"><strong>User logs in</strong> on our server (credentials never touch your app).</div>
             </div>
             <div class="flow-step">
-              <div class="flow-text">Server redirects back to your <span class="flow-code">redirect_uri</span> with a one-time <span class="flow-code">code</span> in the query params.</div>
+              <div class="flow-text">Server redirects back to your <span class="flow-code">redirect_url</span> with a one-time <span class="flow-code">code</span> in the query params.</div>
             </div>
             <div class="flow-step">
-              <div class="flow-text">Your backend exchanges the code at <span class="flow-code">/oidc/oauth2/token</span> using <span class="flow-code">client_id</span> + <span class="flow-code">client_secret</span>. <strong>This happens server-side — secret never exposed to browser.</strong></div>
+              <div class="flow-text">Your backend exchanges the code at <span class="flow-code">/oidc/oauth2/token</span> using <span class="flow-code">client_id</span> + <span class="flow-code">client_secret</span> + <span class="flow-code">code</span> + <span class="flow-code">grant_type</span>. <strong>This happens server-side — secret never exposed to browser.</strong></div>
             </div>
             <div class="flow-step">
-              <div class="flow-text">You receive <span class="flow-code">access_token</span>, <span class="flow-code">id_token</span>, and <span class="flow-code">refresh_token</span>.</div>
+              <div class="flow-text">You receive <span class="flow-code">access_token</span>, <span class="flow-code">refresh_token</span>, and <span class="flow-code">token_type</span>.</div>
             </div>
             <div class="flow-step">
-              <div class="flow-text">Use <span class="flow-code">access_token</span> to call <span class="flow-code">/oidc/oauth2/userinfo</span> or your own protected APIs.</div>
+              <div class="flow-text">Use <span class="flow-code">access_token</span> to call <span class="flow-code">/oidc/oauth2/userinfo</span> and get your user details.</div>
             </div>
           </div>
 
-          <div class="code-block" style="margin-top:24px;">
-            <div class="code-header"><span class="code-lang">Node.js — Full Flow Example</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-            <pre><span class="tok-cmt">// Step 1: Build authorize URL</span>
-<span class="tok-kw">const</span> params = <span class="tok-kw">new</span> <span class="tok-fn">URLSearchParams</span>({
-  response_type: <span class="tok-str">'code'</span>,
-  client_id:     process.env.<span class="tok-prop">CLIENT_ID</span>,
-  redirect_uri:  <span class="tok-str">'https://yourapp.com/callback'</span>,
-  scope:         <span class="tok-str">'openid email profile'</span>,
-  state:         <span class="tok-fn">generateRandomState</span>(),
-});
-res.<span class="tok-fn">redirect</span>(<span class="tok-str">`https://issuer.com/oidc/oauth2/authorize?${params}`</span>);
-
-<span class="tok-cmt">// Step 2: Handle callback route</span>
-app.<span class="tok-fn">get</span>(<span class="tok-str">'/callback'</span>, <span class="tok-kw">async</span> (req, res) => {
-  <span class="tok-kw">const</span> { code, state } = req.query;
-  <span class="tok-fn">verifyState</span>(state);  <span class="tok-cmt">// must match what you stored</span>
-
-  <span class="tok-kw">const</span> tokenRes = <span class="tok-kw">await</span> <span class="tok-fn">fetch</span>(<span class="tok-str">'https://issuer.com/oidc/oauth2/token'</span>, {
-    method: <span class="tok-str">'POST'</span>,
-    headers: { <span class="tok-str">'Content-Type'</span>: <span class="tok-str">'application/x-www-form-urlencoded'</span> },
-    body: <span class="tok-kw">new</span> <span class="tok-fn">URLSearchParams</span>({
-      grant_type:    <span class="tok-str">'authorization_code'</span>,
-      code,
-      client_id:     process.env.<span class="tok-prop">CLIENT_ID</span>,
-      client_secret: process.env.<span class="tok-prop">CLIENT_SECRET</span>,
-      redirect_uri:  <span class="tok-str">'https://yourapp.com/callback'</span>,
-    }),
-  });
-  <span class="tok-kw">const</span> tokens = <span class="tok-kw">await</span> tokenRes.<span class="tok-fn">json</span>();
-  <span class="tok-cmt">// store tokens securely in session / httpOnly cookie</span>
-});</pre>
-          </div>
         </section>
         <hr class="doc-divider">
 
@@ -344,14 +308,13 @@ app.<span class="tok-fn">get</span>(<span class="tok-str">'/callback'</span>, <s
           <div class="code-block">
             <div class="code-header"><span class="code-lang">GET /.well-known/openid-configuration</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
             <pre>{
-  <span class="tok-key">"issuer"</span>:                                <span class="tok-str">"https://your-issuer.com"</span>,
-  <span class="tok-key">"authorization_endpoint"</span>:               <span class="tok-str">"https://your-issuer.com/oidc/oauth2/authorize"</span>,
-  <span class="tok-key">"token_endpoint"</span>:                        <span class="tok-str">"https://your-issuer.com/oidc/oauth2/token"</span>,
-  <span class="tok-key">"userinfo_endpoint"</span>:                    <span class="tok-str">"https://your-issuer.com/oidc/oauth2/userinfo"</span>,
-  <span class="tok-key">"jwks_uri"</span>:                             <span class="tok-str">"https://your-issuer.com/oidc/oauth2/certs"</span>,
-  <span class="tok-key">"revocation_endpoint"</span>:                  <span class="tok-str">"https://your-issuer.com/oidc/oauth2/revoke"</span>,
-  <span class="tok-key">"end_session_endpoint"</span>:                 <span class="tok-str">"https://your-issuer.com/logout"</span>,
-  <span class="tok-key">"developer_console"</span>:                    <span class="tok-str">"https://your-issuer.com/api/developer-console"</span>,
+  <span class="tok-key">"issuer"</span>:                               <span class="tok-str">"https://intekhabx-auth.onrender.com"</span>,
+  <span class="tok-key">"authorization_endpoint"</span>:               <span class="tok-str">"https://intekhabx-auth.onrender.com/oidc/oauth2/authorize"</span>,
+  <span class="tok-key">"token_endpoint"</span>:                       <span class="tok-str">"https://intekhabx-auth.onrender.com/oidc/oauth2/token"</span>,
+  <span class="tok-key">"userinfo_endpoint"</span>:                    <span class="tok-str">"https://intekhabx-auth.onrender.com/oidc/oauth2/userinfo"</span>,
+  <span class="tok-key">"jwks_uri"</span>:                             <span class="tok-str">"https://intekhabx-auth.onrender.com/oidc/oauth2/certs"</span>,
+  <span class="tok-key">"revocation_endpoint"</span>:                  <span class="tok-str">"https://intekhabx-auth.onrender.com/oidc/oauth2/revoke"</span>,
+  <!-- <span class="tok-key">"developer_console"</span>:                    <span class="tok-str">"https://your-issuer.com/api/developer-console"</span>, -->
 
   <span class="tok-key">"response_types_supported"</span>:             [<span class="tok-str">"code"</span>],
   <span class="tok-key">"response_modes_supported"</span>:             [<span class="tok-str">"query"</span>, <span class="tok-str">"form_post"</span>],
@@ -360,7 +323,7 @@ app.<span class="tok-fn">get</span>(<span class="tok-str">'/callback'</span>, <s
 
   <span class="tok-key">"scopes_supported"</span>:                     [<span class="tok-str">"openid"</span>, <span class="tok-str">"email"</span>, <span class="tok-str">"profile"</span>],
   <span class="tok-key">"claims_supported"</span>: [
-    <span class="tok-str">"sub"</span>, <span class="tok-str">"email"</span>, <span class="tok-str">"username"</span>, <span class="tok-str">"name"</span>, <span class="tok-str">"role"</span>, <span class="tok-str">"aud"</span>, <span class="tok-str">"iss"</span>
+    <span class="tok-str">"sub"</span>, <span class="tok-str">"email"</span>, <span class="tok-str">"name"</span>, <span class="tok-str">"exp"</span>, <span class="tok-str">"aud"</span>, <span class="tok-str">"iss"</span>
   ],
   <span class="tok-key">"token_endpoint_auth_methods_supported"</span>: [
     <span class="tok-str">"client_secret_post"</span>, <span class="tok-str">"client_secret_basic"</span>
@@ -368,7 +331,6 @@ app.<span class="tok-fn">get</span>(<span class="tok-str">'/callback'</span>, <s
   <span class="tok-key">"grant_types_supported"</span>: [
     <span class="tok-str">"authorization_code"</span>,
     <span class="tok-str">"refresh_token"</span>,
-    <span class="tok-str">"urn:ietf:params:oauth:grant-type:jwt-bearer"</span>
   ]
 }</pre>
           </div>
@@ -415,23 +377,18 @@ app.<span class="tok-fn">get</span>(<span class="tok-str">'/callback'</span>, <s
               <tr>
                 <td><span class="method post">POST</span></td>
                 <td>/oidc/oauth2/revoke</td>
-                <td>Revoke an access token or refresh token</td>
+                <td>Revoke access and refresh token and logout user</td>
               </tr>
-              <tr>
-                <td><span class="method get">GET</span></td>
-                <td>/logout</td>
-                <td>End the user session (end_session_endpoint)</td>
-              </tr>
-              <tr>
+              <!-- <tr>
                 <td><span class="method get">GET</span></td>
                 <td>/api/developer-console</td>
                 <td>Manage your OAuth applications</td>
-              </tr>
+              </tr> -->
             </tbody>
           </table>
 
           <h3 class="doc-h3">Refresh Token</h3>
-          <p class="doc-p">When the access token expires (1 hour), use the refresh token to get a new one without asking the user to log in again.</p>
+          <p class="doc-p">When the access token expires (15 min), use the refresh token to get a new one without asking the user to log in again.</p>
           <div class="code-block">
             <div class="code-header"><span class="code-lang">JavaScript — Refresh Token</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
             <pre><span class="tok-kw">const</span> response = <span class="tok-kw">await</span> <span class="tok-fn">fetch</span>(<span class="tok-str">'/oidc/oauth2/token'</span>, {
@@ -444,11 +401,11 @@ app.<span class="tok-fn">get</span>(<span class="tok-str">'/callback'</span>, <s
     <span class="tok-prop">client_secret</span>: <span class="tok-str">'YOUR_CLIENT_SECRET'</span>,
   })
 });
-<span class="tok-kw">const</span> { access_token, refresh_token } = <span class="tok-kw">await</span> response.<span class="tok-fn">json</span>();
+<span class="tok-kw">const</span> { accessToken, refreshToken , tokenType: "Bearer"} = <span class="tok-kw">await</span> response.<span class="tok-fn">json</span>();
 <span class="tok-cmt">// store new refresh_token — old one is now invalid</span></pre>
           </div>
 
-          <h3 class="doc-h3">Verify JWT (ID Token / Access Token)</h3>
+          <!-- <h3 class="doc-h3">Verify JWT (ID Token / Access Token)</h3>
           <div class="code-block">
             <div class="code-header"><span class="code-lang">Node.js — Verify with JWKS</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
             <pre><span class="tok-kw">import</span> { createRemoteJWKSet, jwtVerify } <span class="tok-kw">from</span> <span class="tok-str">'jose'</span>;
@@ -464,7 +421,7 @@ app.<span class="tok-fn">get</span>(<span class="tok-str">'/callback'</span>, <s
 
 console.<span class="tok-fn">log</span>(payload.sub);    <span class="tok-cmt">// user ID</span>
 console.<span class="tok-fn">log</span>(payload.email);  <span class="tok-cmt">// user email</span></pre>
-          </div>
+          </div> -->
         </section>
         <hr class="doc-divider">
 
@@ -482,7 +439,7 @@ console.<span class="tok-fn">log</span>(payload.email);  <span class="tok-cmt">/
             <tbody>
               <tr><td><span class="tag">openid</span></td><td>Required. Enables OIDC — gives you an ID token with <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">sub</code>.</td></tr>
               <tr><td><span class="tag">email</span></td><td>Adds <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">email</code> claim to the ID token and userinfo.</td></tr>
-              <tr><td><span class="tag">profile</span></td><td>Adds <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">name</code>, <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">username</code>, <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">role</code> to userinfo.</td></tr>
+              <tr><td><span class="tag">profile</span></td><td>Adds <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">name</code>, <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">...</code> to userinfo.</td></tr>
             </tbody>
           </table>
 
@@ -490,9 +447,9 @@ console.<span class="tok-fn">log</span>(payload.email);  <span class="tok-cmt">/
           <div class="claims-grid">
             <div class="claim-card"><div class="claim-name">sub</div><div class="claim-desc">Unique user identifier. Never changes.</div></div>
             <div class="claim-card"><div class="claim-name">email</div><div class="claim-desc">User's email address.</div></div>
-            <div class="claim-card"><div class="claim-name">username</div><div class="claim-desc">Display / login username.</div></div>
+            <!-- <div class="claim-card"><div class="claim-name">username</div><div class="claim-desc">Display / login username.</div></div> -->
             <div class="claim-card"><div class="claim-name">name</div><div class="claim-desc">Full name of the user.</div></div>
-            <div class="claim-card"><div class="claim-name">role</div><div class="claim-desc">User's role in the system.</div></div>
+            <div class="claim-card"><div class="claim-name">exp</div><div class="claim-desc">Total expires time of access_token.</div></div>
             <div class="claim-card"><div class="claim-name">iss</div><div class="claim-desc">Token issuer URL.</div></div>
             <div class="claim-card"><div class="claim-name">aud</div><div class="claim-desc">Audience — your client_id.</div></div>
           </div>
@@ -512,20 +469,14 @@ console.<span class="tok-fn">log</span>(payload.email);  <span class="tok-cmt">/
               <tr>
                 <td><strong style="color:#fff;">Access Token</strong></td>
                 <td><span class="tag">JWT</span></td>
-                <td>~1 hour</td>
+                <td>~15 min</td>
                 <td>Call protected APIs. Send as <code style="font-family:var(--mono);font-size:12px;color:#c084fc;">Authorization: Bearer &lt;token&gt;</code></td>
               </tr>
               <tr>
-                <td><strong style="color:#fff;">ID Token</strong></td>
-                <td><span class="tag">JWT</span></td>
-                <td>~1 hour</td>
-                <td>Verify user identity. Contains user claims. Signed with RS256.</td>
-              </tr>
-              <tr>
                 <td><strong style="color:#fff;">Refresh Token</strong></td>
-                <td><span class="tag">Opaque</span></td>
+                <td><span class="tag">JWT</span></td>
                 <td>Days / weeks</td>
-                <td>Get new access tokens. Store securely. Rotate after each use.</td>
+                <td>Get new access tokens. Store securely. Rotate after use.</td>
               </tr>
             </tbody>
           </table>
