@@ -4,6 +4,7 @@ import { isLoggedIn } from '../auth/auth.middleware.js';
 import {validate} from '../../common/middleware/validate.middleware.js'
 import registerApplicationDto from './dto-validator/register-application.dto.js';
 import getOrRenewTokensDto from './dto-validator/token-generation.dto.js';
+import { verifyOauthAccessToken } from './oidc.middleware.js';
 
 
 const router = express.Router();
@@ -25,6 +26,7 @@ router.post('/oidc/oauth2/consent/deny', isLoggedIn, controller.denyConsent);
 
 
 router.post('/oidc/oauth2/token', validate(getOrRenewTokensDto), controller.getOrRenewClientAccessAndRefreshToken);
+router.get('/oidc/oauth2/userinfo', verifyOauthAccessToken, controller.getUserInfo);
 
 
 

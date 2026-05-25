@@ -74,7 +74,7 @@ export const wellKnownController = asyncHandler(async (_, res)=>{
     userinfo_endpoint: `${baseURL}/oidc/oauth2/userinfo`,
     token_endpoint: `${baseURL}/oidc/oauth2/token`,
     jwks_uri: `${baseURL}/oidc/oauth2/certs`,
-    revocation_endpoint: `${baseURL}/logout`,
+    revocation_endpoint: `${baseURL}/oidc/oauth2/revoke`,
     developer_console: `${baseURL}/api/developer-console`,
     response_types_supported: ["code"],
     response_modes_supported: ["query", "form_post"],
@@ -87,7 +87,8 @@ export const wellKnownController = asyncHandler(async (_, res)=>{
       "email",
       "username",
       "name",
-      "role",
+      "exp",
+      // "role",
       "aud",
       "iss"
     ],
@@ -351,3 +352,11 @@ export const getOrRenewClientAccessAndRefreshToken = asyncHandler(async(req, res
 })
 
 
+
+export const getUserInfo = asyncHandler(async(req, res)=>{
+  // step:1 - extract all data from req.user
+  const {sub, name, email} = req?.user;
+  const exp = process.env.JWT_ACCESS_EXPIRES_IN || "10m";
+
+  ApiResponse.ok(res, "userinfo fetched successfully", {sub, name, email, exp});
+})
