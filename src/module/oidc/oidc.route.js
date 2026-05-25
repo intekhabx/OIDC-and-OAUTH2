@@ -3,6 +3,7 @@ import * as controller from './oidc.controller.js';
 import { isLoggedIn } from '../auth/auth.middleware.js';
 import {validate} from '../../common/middleware/validate.middleware.js'
 import registerApplicationDto from './dto-validator/register-application.dto.js';
+import getOrRenewTokensDto from './dto-validator/token-generation.dto.js';
 
 
 const router = express.Router();
@@ -23,6 +24,7 @@ router.post('/oidc/oauth2/consent/accept', isLoggedIn, controller.acceptConsent)
 router.post('/oidc/oauth2/consent/deny', isLoggedIn, controller.denyConsent);
 
 
+router.post('/oidc/oauth2/token', validate(getOrRenewTokensDto), controller.getOrRenewClientAccessAndRefreshToken);
 
 
 

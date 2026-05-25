@@ -55,5 +55,21 @@ const consentSchema = new mongoose.Schema({
   },
 }, {timestamps: true});
 
+
+const clientTokenSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  },
+  application: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Application"
+  },
+  refreshToken: {
+    type: String,
+  },
+}, {timestamps: true})
+
 export const applicationModel = mongoose.model("Application", applicationSchema);
 export const consentModel = mongoose.model("Consent", consentSchema);
+export const clientTokenModel = mongoose.model("ClientToken", clientTokenSchema);

@@ -3,11 +3,12 @@ import crypto from 'crypto';
 import asyncHandler from "../../common/utils/async-handler.utils.js";
 import ApiError from '../../common/utils/api-error.utils.js';
 import ApiResponse from '../../common/utils/api-response.utils.js';
-import {applicationModel, consentModel} from './oidc.model.js';
+import {applicationModel, clientTokenModel, consentModel} from './oidc.model.js';
 import { jwks } from '../../common/config/key.config.js';
 import userModel from '../auth/auth.model.js';
-import {verifyRefreshToken} from '../../common/utils/jwt.utils.js'
+import {generateAccessToken, generateRefreshToken, verifyRefreshToken} from '../../common/utils/jwt.utils.js'
 import { redis } from '../../common/config/redis.config.js';
+import { buildAccessTokenPayload } from '../../common/utils/constants.utils.js';
 
 
 
@@ -21,6 +22,49 @@ function makeDataHash(data){
   return crypto.createHash('sha256').update(data).digest('hex');
 }
 
+async function verifyToken(refresh_token){
+  // step:1 - validate the refresh_token
+  if(!refresh_token){
+    throw ApiError.badRequest("missing refresh_token")
+  }
+  // step:2 - verify client refresh_token that token created by our private key or not
+  let decoded;
+  try {
+    decoded = verifyRefreshToken(refresh_token);
+  } catch (err) {
+    throw ApiError.unAuthorized("invalid refresh token");
+  }
+  // step:3 - verify user exists or not in DB
+  const user = await userModel.findById(decoded.sub);
+  if(!user){
+    throw ApiError.unAuthorized("user not found");
+  }
+
+  // step:4 - verify the refresh_token with clientTokenModel
+  const hashed = makeDataHash(refresh_token);
+  const storedToken = await clientTokenModel.findOne({refreshToken: hashed})
+  if(!storedToken){
+    throw ApiError.unAuthorized("refresh token revoked");
+  }
+
+  return {userId: user._id}
+}
+
+async function verifyShortCode(code) {
+  // step:1 - verify the shortCode in redis
+  const shortCode = await redis.get(`shortcode:${code}`);
+  if(!shortCode){
+    throw ApiError.unAuthorized("invalid or expired code");
+  }
+
+  // step:2 - if everything is valid then parse the json and extract userId from shortcode
+  const {userId} = JSON.parse(shortCode);
+  // delete the sort code from redis because it is one time use only
+  await redis.del(`shortcode:${code}`);
+
+  return { userId };
+}
+
 
 export const wellKnownController = asyncHandler(async (_, res)=>{
   const baseURL = process.env.ISSUER_URL;
@@ -28,7 +72,7 @@ export const wellKnownController = asyncHandler(async (_, res)=>{
     issuer: `${baseURL}`,
     authorization_endpoint: `${baseURL}/oidc/oauth2/authorize`,
     userinfo_endpoint: `${baseURL}/oidc/oauth2/userinfo`,
-    token_endpoint: `${baseURL}/token`,
+    token_endpoint: `${baseURL}/oidc/oauth2/token`,
     jwks_uri: `${baseURL}/oidc/oauth2/certs`,
     revocation_endpoint: `${baseURL}/logout`,
     developer_console: `${baseURL}/api/developer-console`,
@@ -47,7 +91,9 @@ export const wellKnownController = asyncHandler(async (_, res)=>{
       "aud",
       "iss"
     ],
-    grant_types_supported: ["authorization_code", "refresh_token", "jwt_bearer"]
+    grant_types_supported: ["authorization_code", "refresh_token", 
+      // "jwt_bearer"
+    ]
   })
 })
 
@@ -249,5 +295,59 @@ export const denyConsent = asyncHandler(async(req, res)=>{
 })
 
 
+
+export const getOrRenewClientAccessAndRefreshToken = asyncHandler(async(req, res)=>{
+  //client came with client_id, client_secret, short code and grant_type (shortcode || refresh_token)
+  // step:1 - extract client_id client_secret short code and grant_type and refresh_token
+  const {client_id, client_secret, code, grant_type, refresh_token} = req.body;
+
+  if(grant_type !== "authorization_code" && grant_type !== "refresh_token"){
+    throw ApiError.badRequest("grant_type should be either authorization_code or refresh_token");
+  }
+
+  // step:2 - verify client_id and client_secret
+  const app = await applicationModel.findOne({clientId: client_id}).select("+clientSecret");
+  if(!app){
+    throw ApiError.unAuthorized("missing or invalid client_id and client_secret");
+  }
+
+  // step:3 - verify client_secret with hashed clientSecret
+  const hashedClientSecret = makeDataHash(client_secret);
+  if(app.clientSecret !== hashedClientSecret){
+    throw ApiError.unAuthorized("invalid or missing client_id and client_secret");
+  }
+
+  // step:4 - generate or renew token based on shortcode || refresh_token
+  let userId;
+  // generate the token for first time user
+  if(grant_type === "authorization_code"){
+    ({userId} = await verifyShortCode(code));
+  }
+  // refresh the token after access_token expires
+  else if(grant_type === "refresh_token"){
+    ({userId} = await verifyToken(refresh_token));
+  }
+
+  // step:5 - access user details to make tokens
+  const user = await userModel.findById(userId);
+  if(!user){
+    throw ApiError.unAuthorized("user doesn't exist");
+  }
+
+  // step:6 - generate accessToken and refreshToken for the client and send to client
+  const payload = buildAccessTokenPayload(user, app.clientId);
+  const accessToken = generateAccessToken(payload);
+  const refreshToken = generateRefreshToken({sub: user._id});
+
+  // step:7 - store hased refreshToken of client user in db
+  const hashedRefreshToken = makeDataHash(refreshToken);
+  await clientTokenModel.create({
+    refreshToken: hashedRefreshToken
+  })
+
+  ApiResponse.ok(res, "tokens generated successfully", {accessToken, refreshToken, tokenType: "Bearer"});
+
+// furture improvement: PKCE-implementation
+})
 
 
