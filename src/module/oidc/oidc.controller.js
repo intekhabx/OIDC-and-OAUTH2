@@ -134,6 +134,7 @@ export const registerApplication = asyncHandler(async (req, res)=>{
     redirectUrl: redirect_url,
     clientId,
     clientSecret: hashedClientSecret,
+    owner: req?.user?.id,
   })
 
   // step:4 - return clientId and clientSecret to the application owner
@@ -191,6 +192,7 @@ export const showUserConsentPage = asyncHandler(async (req, res)=>{
     userId: user._id,
     userName: user.name,
     userEmail: user.email,
+    appId: app._id,
     appName: app.name,
     client_id: app.clientId,
     state,
@@ -257,7 +259,9 @@ export const acceptConsent = asyncHandler(async(req, res)=>{
   // step:3 - store consent in DB and delete from redis
   await consentModel.create({
     granted: true,
-    scope: ["openid", "profile", "email"]
+    scope: ["openid", "profile", "email"],
+    user : req?.user?.id || parsedRedisData.userId,
+    application: parsedRedisData.appId
   })
   await redis.del(`consent:${consent_id}`);
   
@@ -343,7 +347,9 @@ export const getOrRenewClientAccessAndRefreshToken = asyncHandler(async(req, res
   // step:7 - store hased refreshToken of client user in db
   const hashedRefreshToken = makeDataHash(refreshToken);
   await clientTokenModel.create({
-    refreshToken: hashedRefreshToken
+    refreshToken: hashedRefreshToken,
+    application: app._id,
+    user: user._id,
   })
 
   ApiResponse.ok(res, "tokens generated successfully", {accessToken, refreshToken, tokenType: "Bearer"});
@@ -359,4 +365,29 @@ export const getUserInfo = asyncHandler(async(req, res)=>{
   const exp = process.env.JWT_ACCESS_EXPIRES_IN || "10m";
 
   ApiResponse.ok(res, "userinfo fetched successfully", {sub, name, email, exp});
+})
+
+
+
+export const signOutUser = asyncHandler(async(req, res)=> {
+  // client came with bearer:access_token and body:refresh_token || we protect the signOutUser route so only login user can logout
+  // step:1 - extract the refreshtoken from body and user_id and client id from req.user
+  const {refresh_token} = req.body;
+  const {sub, aud} = req?.user;
+
+  // step:2 - find application_id using client_id
+  const app = await applicationModel.findOne({clientId: aud})
+  if (!app){
+    throw ApiError.unAuthorized("invalid client application");
+  }
+
+  // step:3 - find the refreshTokenSession in the db and delete it
+  const hashedRefreshToken = makeDataHash(refresh_token);
+  const token = await clientTokenModel.findOneAndDelete({refreshToken: hashedRefreshToken, user: sub, application: app._id});
+
+  if(!token){
+    throw ApiError.unAuthorized("invalid refresh_tokenhello");
+  }
+
+  ApiResponse.ok(res, "user logged out successfully");
 })

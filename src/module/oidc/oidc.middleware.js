@@ -30,7 +30,7 @@ export const verifyOauthAccessToken = asyncHandler(async(req, res, next)=>{
     sub: user._id,
     name: user.name,
     email: user.email,
-    // aud: decoded.aud, //client_id
+    aud: decoded.aud, //client_id
   }
   next();
 })
