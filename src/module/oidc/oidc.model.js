@@ -51,7 +51,7 @@ const consentSchema = new mongoose.Schema({
   }],
   granted: {
     type: Boolean,
-    default: false
+    default: true
   },
 }, {timestamps: true});
 

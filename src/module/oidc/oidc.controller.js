@@ -18,7 +18,7 @@ function generateClientIdAndSecret(){
   return {clientId, clientSecret};
 }
 
-function makeDataHash(data){
+export function makeDataHash(data){
   return crypto.createHash('sha256').update(data).digest('hex');
 }
 
@@ -64,6 +64,21 @@ async function verifyShortCode(code) {
 
   return { userId };
 }
+
+
+async function generateShortCode(userId, clientId, redirectUrl) {
+  // step:1 - generateShortCode and store in redis with userId client_id and redirec_ url
+  const shortCode = crypto.randomBytes(16).toString('hex');
+
+  await redis.set(`shortcode:${shortCode}`, JSON.stringify({
+    userId,
+    client_id: clientId,
+    redirect_url: redirectUrl,
+  }), "EX", 300) //5min
+
+  return shortCode;
+}
+
 
 
 export const wellKnownController = asyncHandler(async (_, res)=>{
@@ -185,7 +200,14 @@ export const showUserConsentPage = asyncHandler(async (req, res)=>{
     return res.status(302).redirect(`/oidc/oauth2/authenticate?${query}`);
   }
 
-  // step:5 - now user and app is authenticated and logged-in then show the consent page
+  // step:5 - check user already gave his consent or not
+  const consent = await consentModel.findOne({user: user._id, application: app._id});
+  if(consent && consent?.granted){
+    const shortCode = generateShortCode(user._id, app.clientId, app.redirectUrl);
+    return res.status(302).redirect(`${redirect_url}?code=${shortCode}&state=${state}`);
+  }
+
+  // step:6 - now user and app is authenticated and logged-in & this is first user give consent so, show the consent page
   // add app and user_data and state in redis to show on consent page
   const consentId = crypto.randomUUID();
   await redis.set(`consent:${consentId}`, JSON.stringify({
@@ -265,14 +287,8 @@ export const acceptConsent = asyncHandler(async(req, res)=>{
   })
   await redis.del(`consent:${consent_id}`);
   
-  // step:4 generateShortCode and store in redis with userId and client_id
-  const shortCode = crypto.randomBytes(16).toString('hex');
-
-  await redis.set(`shortcode:${shortCode}`, JSON.stringify({
-    userId: parsedRedisData.userId,
-    client_id: parsedRedisData.client_id,
-    redirect_url: parsedRedisData.redirect_url
-  }), "EX", 300) //5min
+  // step:4 generateShortCode and store in redis with userId, client_id and redirect_url
+  const shortCode = generateShortCode(parsedRedisData.userId, parsedRedisData.client_id, parsedRedisData.redirect_url);
   
   // step:5 - redirect user to redirect_url with shortCode and state
   res.status(302).redirect(`${parsedRedisData.redirect_url}?code=${shortCode}&state=${parsedRedisData.state}`);

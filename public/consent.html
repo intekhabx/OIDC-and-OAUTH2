@@ -483,8 +483,27 @@
 
       <!-- buttons -->
       <div class="btn-row">
-        <button id="cancel" class="btn-cancel" >Cancel</button>
-        <button id="continue" class="btn-continue">Continue</button>
+
+        <form id="consent-form" method="post">
+          <input type="hidden" id="consent-id" name="consent_id">
+
+          <button 
+            id="cancel" 
+            type="submit"
+            formaction="/oidc/oauth2/consent/deny"
+            class="btn-cancel">
+            Cancel
+          </button>
+
+          <button 
+            type="submit"
+            id="continue"
+            formaction="/oidc/oauth2/consent/accept"
+            class="btn-continue">
+            Continue
+          </button>
+        </form>
+
       </div>
 
     </div>
@@ -505,6 +524,8 @@
 
   const params = new URLSearchParams(window.location.search);
   const consent_id = params.get('consent_id');
+  document.getElementById("consent-id").value = consent_id;
+
 
   let appName = document.querySelectorAll(".app-name");
   let userEmail = document.querySelectorAll('.acc-email');
@@ -531,36 +552,13 @@
   }
 
 
-  const continueBtn = document.getElementById('continue');
-  const cancelBtn = document.getElementById('cancel');
 
-  continueBtn.addEventListener('click', async ()=>{
-    const response = await fetch('/oidc/oauth2/consent/accept', {method: "POST", headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${accessToken}`
-    },
-    body: JSON.stringify({consent_id})
-    })
+  document.getElementById("consent-form").addEventListener('submit',()=>{
+    const clickedButton = e.submitter; //cancel or continue button whatever clicked
 
-    // important for redirection
-    if (response.redirected) {
-      window.location.href = response.url;
-    }
-  })
-
-
-  cancelBtn.addEventListener('click', async ()=>{
-    const response = await fetch('/oidc/oauth2/consent/deny', {method: "POST", headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${accessToken}`
-    },
-    body: JSON.stringify({consent_id})
-    })
-
-    // important for redirection
-    if (response.redirected) {
-      window.location.href = response.url;
-    }
+    clickedButton.disabled = true;
+    clickedButton.style.cursor = "not-allowed";
+    clickedButton.textContent = "Please Wait..."
   })
 
 </script>

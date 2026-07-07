@@ -4,7 +4,7 @@ import { isLoggedIn } from '../auth/auth.middleware.js';
 import {validate} from '../../common/middleware/validate.middleware.js'
 import registerApplicationDto from './dto-validator/register-application.dto.js';
 import getOrRenewTokensDto from './dto-validator/token-generation.dto.js';
-import { verifyOauthAccessToken } from './oidc.middleware.js';
+import { authenticateUserWithRefreshToken, verifyOauthAccessToken } from './oidc.middleware.js';
 import signOutUserDto from './dto-validator/signout-user.dto.js';
 
 
@@ -22,8 +22,8 @@ router.get('/oidc/oauth2/certs', controller.getPublicKey);
 
 router.get('/oidc/oauth2/authorize', controller.showUserConsentPage);
 router.get('/oidc/oauth2/consent-info', isLoggedIn, controller.getUserAndAppDetails);
-router.post('/oidc/oauth2/consent/accept', isLoggedIn, controller.acceptConsent);
-router.post('/oidc/oauth2/consent/deny', isLoggedIn, controller.denyConsent);
+router.post('/oidc/oauth2/consent/accept', authenticateUserWithRefreshToken, controller.acceptConsent);
+router.post('/oidc/oauth2/consent/deny', authenticateUserWithRefreshToken, controller.denyConsent);
 
 
 router.post('/oidc/oauth2/token', validate(getOrRenewTokensDto), controller.getOrRenewClientAccessAndRefreshToken);
