@@ -144,7 +144,7 @@
           <input id="log-password" type="password" placeholder="••••••••" name="password" required/>
         </div>
   
-        <button class="submit-btn">Sign In</button>
+        <button id="log-btn" class="submit-btn">Sign In</button>
       </form>
 
       <div class="switch-text">
@@ -211,6 +211,7 @@
   registerForm.addEventListener('submit', async (e)=>{
     e.preventDefault();
     
+    const registerBtn = document.querySelector("#reg-btn");
     const name = document.getElementById('name').value;
     const username = document.getElementById('username').value;
     const email = document.getElementById('email').value;
@@ -225,6 +226,10 @@
 
     const queryParams = getQueryParmas();
     const query = `redirect_url=${queryParams.redirect_url}&client_id=${queryParams.client_id}&state=${queryParams.state}`;
+
+    registerBtn.disabled = true;
+    registerBtn.style.cursor = "not-allowed";
+    registerBtn.textContent = "Creating...";
 
     const response = await fetch('/api/auth/register', {method: "POST", 
     headers: {
@@ -243,6 +248,9 @@
     else{
       const message = data.message || data.error[0]?.message|| data.data.message || "Error";
       showWarningNote(message, regWarningTag);
+      registerBtn.disabled = false;
+      registerBtn.style.cursor = "pointer";
+      registerBtn.textContent = "Create Account";
     }
   })
 
@@ -250,11 +258,16 @@
   loginForm.addEventListener('submit', async (e)=>{
     e.preventDefault();
 
+    const loginBtn = document.querySelector("#log-btn");
     const identifier = document.getElementById('email-username').value;
     const password = document.getElementById('log-password').value;
 
     const queryParams = getQueryParmas();
     const query = `redirect_url=${queryParams.redirect_url}&client_id=${queryParams.client_id}&state=${queryParams.state}`;
+
+    loginBtn.disabled = true;
+    loginBtn.style.cursor = "not-allowed";
+    loginBtn.textContent = "Signing-In...";
 
     const response = await fetch("/api/auth/login", {method: "POST", 
     headers: {
@@ -278,6 +291,9 @@
     else{
       const message = data.message || data.error[0]?.message|| data.data.message || "Error";
       showWarningNote(message, logWarningTag);
+      loginBtn.disabled = false;
+      loginBtn.style.cursor = "pointer";
+      loginBtn.textContent = "Sign In";
     }
 
   })

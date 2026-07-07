@@ -84,12 +84,30 @@
   line-height: 1.4;
 }
 
-/* input[readonly] {
-  background: rgba(120, 80, 160, 0.25);
-  border: 1px solid rgba(200, 75, 138, 0.4);
-  cursor: not-allowed;
-  color: #e8d8ff;
-} */
+
+.fg{
+    position: relative;
+}
+
+.copy-btn{
+    position: absolute;
+    top: -2;
+    right: 0;
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: 600;
+    border: 1px solid #c84b8a;
+    background: transparent;
+    color: #c84b8a;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.copy-btn:hover{
+    background: #be4180;
+    color: #fff;
+}
 
 /* smooth reveal animation */
 @keyframes fadeIn {
@@ -182,11 +200,13 @@
           </p>
 
           <div class="fg">
+            <button id="client-copy" type="button" class="copy-btn">COPY</button>
             <label>CLIENT ID</label>
             <div id="client-id" class="client"></div>
           </div>
 
           <div class="fg">
+            <button id="secret-copy" type="button" class="copy-btn">COPY</button>
             <label>CLIENT SECRET</label>
             <div id="client-secret" class="client"></div>
           </div>
@@ -234,6 +254,9 @@
     const name = document.getElementById('name').value;
     const url = document.getElementById('url').value;
     const redirect_url = document.getElementById('redirect-url').value;
+    const submitBtn = document.querySelector(".submit-btn");
+    submitBtn.disabled = true;
+    submitBtn.style.cursor = "not-allowed"
 
     try {
       const response = await fetch('/oidc/oauth2/register-application', {method: "POST", headers: {
@@ -255,12 +278,16 @@
       else{
         const message = data.message || data.error[0]?.message|| data.data.message || "Error";
         showWarningNote(message, warningTag);
+        submitBtn.disabled = false;
+        submitBtn.style.cursor = "pointer"
         return;
       }
     } 
     catch (err) {
       const message = err.message || err.data.message || "Error"
       showWarningNote(message, warningTag);
+      submitBtn.disabled = false;
+      submitBtn.style.cursor = "pointer"
     }
   }
 
@@ -269,6 +296,36 @@
     e.preventDefault();
     sendApplicationData();
   })
+
+
+  // fucntion for coping the client-id and client-secret
+  function copyText(id, button) {
+    const text = document.getElementById(id).textContent.trim();
+
+    navigator.clipboard.writeText(text).then(() => {
+        const originalText = button.textContent;
+        button.textContent = "COPIED";
+
+        setTimeout(() => {
+            button.textContent = originalText;
+        }, 2000);
+    }).catch(err => {
+        console.error("Copy failed:", err);
+    });
+  }
+
+  // copy client-id
+  const clientCopyBtn = document.querySelector("#client-copy");
+  clientCopyBtn.addEventListener("click", ()=> {
+    copyText("client-id", clientCopyBtn)
+  })
+
+  // copy client-secret
+  const secretCopyBtn = document.querySelector("#secret-copy");
+  secretCopyBtn.addEventListener("click", ()=> {
+    copyText("client-secret", secretCopyBtn)
+  })
+
 </script>
 
 </body>
