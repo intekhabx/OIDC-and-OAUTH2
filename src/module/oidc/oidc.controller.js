@@ -203,7 +203,7 @@ export const showUserConsentPage = asyncHandler(async (req, res)=>{
   // step:5 - check user already gave his consent or not
   const consent = await consentModel.findOne({user: user._id, application: app._id});
   if(consent && consent?.granted){
-    const shortCode = generateShortCode(user._id, app.clientId, app.redirectUrl);
+    const shortCode = await generateShortCode(user._id, app.clientId, app.redirectUrl);
     return res.status(302).redirect(`${redirect_url}?code=${shortCode}&state=${state}`);
   }
 
@@ -288,7 +288,7 @@ export const acceptConsent = asyncHandler(async(req, res)=>{
   await redis.del(`consent:${consent_id}`);
   
   // step:4 generateShortCode and store in redis with userId, client_id and redirect_url
-  const shortCode = generateShortCode(parsedRedisData.userId, parsedRedisData.client_id, parsedRedisData.redirect_url);
+  const shortCode = await generateShortCode(parsedRedisData.userId, parsedRedisData.client_id, parsedRedisData.redirect_url);
   
   // step:5 - redirect user to redirect_url with shortCode and state
   res.status(302).redirect(`${parsedRedisData.redirect_url}?code=${shortCode}&state=${parsedRedisData.state}`);
