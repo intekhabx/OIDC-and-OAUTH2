@@ -35,6 +35,11 @@ export const corsMiddleware = cors({
         return callback(null, true);
       }
 
+      // whitelisting my ownurl
+      if(origin === process.env.ISSUER_URL || "http://localhost:8000"){
+        return callback(null, true);
+      }
+
       const allowed = await isAllowedOrigin(origin);
       if (allowed) {
         return callback(null, true);
