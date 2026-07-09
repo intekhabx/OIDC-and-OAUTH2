@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import authRoute from './module/auth/auth.route.js';
 import errorHandler from './common/utils/error-handler.utils.js';
 import oidcRoute from './module/oidc/oidc.route.js';
+import { corsMiddleware } from './common/middleware/cors.middleware.js';
 
 
 function createApplication(){
@@ -12,7 +13,8 @@ function createApplication(){
   app.use(express.json());
   app.use(express.urlencoded({extended: true}));
   app.use(express.static('public'));
-  app.use(cookieParser())
+  app.use(cookieParser());
+  app.use(corsMiddleware);
 
 
   // routes

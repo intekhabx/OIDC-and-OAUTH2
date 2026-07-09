@@ -137,8 +137,8 @@
                   <div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
                   <pre><span class="tok-kw">const</span> response = <span class="tok-kw">await</span> <span class="tok-fn">fetch</span>(<span class="tok-str">'/oidc/oauth2/token'</span>, {
   <span class="tok-prop">method</span>: <span class="tok-str">'POST'</span>,
-  <span class="tok-prop">headers</span>: { <span class="tok-str">'Content-Type'</span>: <span class="tok-str">'application/x-www-form-urlencoded'</span> },
-  <span class="tok-prop">body</span>: <span class="tok-kw">new</span> <span class="tok-fn">URLSearchParams</span>({
+  <span class="tok-prop">headers</span>: { <span class="tok-str">'Content-Type'</span>: <span class="tok-str">'application/json'</span> },
+  <span class="tok-prop">body</span>: <span class="tok-fn">JSON.stringify</span>({
     <span class="tok-prop">code</span>: authCode,          <span class="tok-cmt">// from redirect URL</span>
     <span class="tok-prop">client_id</span>: <span class="tok-str">'YOUR_CLIENT_ID'</span>,
     <span class="tok-prop">client_secret</span>: <span class="tok-str">'YOUR_CLIENT_SECRET'</span>,
@@ -146,7 +146,8 @@
   })
 });
 
-<span class="tok-kw">const</span> { accessToken, refreshToken , tokenType: "Bearer"} = <span class="tok-kw">await</span> response.<span class="tok-fn">json</span>();</pre>
+<span class="tok-kw">const</span> result = <span class="tok-kw">await</span> response.<span class="tok-fn">json</span>();
+<span class="tok-kw">const</span> { accessToken, refreshToken, tokenType: "Bearer" } = result?.<span class="tok-fn">data</span>;</pre>
                 </div>
               </div>
             </div>
@@ -158,12 +159,12 @@
                 <p>Use the access token to fetch the logged-in user's profile.</p>
                 <div class="code-block">
                   <div class="code-header"><span class="code-lang">JavaScript</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-                  <pre><span class="tok-kw">const</span> user = <span class="tok-kw">await</span> <span class="tok-fn">fetch</span>(<span class="tok-str">'/oidc/oauth2/userinfo'</span>, {
+                  <pre><span class="tok-kw">const</span> response = <span class="tok-kw">await</span> <span class="tok-fn">fetch</span>(<span class="tok-str">'/oidc/oauth2/userinfo'</span>, {
   <span class="tok-prop">headers</span>: { <span class="tok-str">'Authorization'</span>: <span class="tok-str">`Bearer ${access_token}`</span> }
-}).<span class="tok-fn">then</span>(r => r.<span class="tok-fn">json</span>());
+})
 
-<span class="tok-cmt">// { sub, email, name, exp }</span>
-console.<span class="tok-fn">log</span>(user.email);</pre>
+<span class="tok-kw">const</span> result = <span class="tok-kw">await</span> response.<span class="tok-fn">json</span>();
+<span class="tok-kw">const</span> { sub, name, email, exp } = result?.<span class="tok-fn">data</span>;</pre>
                 </div>
               </div>
             </div>
@@ -393,16 +394,19 @@ console.<span class="tok-fn">log</span>(user.email);</pre>
             <div class="code-header"><span class="code-lang">JavaScript — Refresh Token</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
             <pre><span class="tok-kw">const</span> response = <span class="tok-kw">await</span> <span class="tok-fn">fetch</span>(<span class="tok-str">'/oidc/oauth2/token'</span>, {
   <span class="tok-prop">method</span>: <span class="tok-str">'POST'</span>,
-  <span class="tok-prop">headers</span>: { <span class="tok-str">'Content-Type'</span>: <span class="tok-str">'application/x-www-form-urlencoded'</span> },
-  <span class="tok-prop">body</span>: <span class="tok-kw">new</span> <span class="tok-fn">URLSearchParams</span>({
+  <span class="tok-prop">headers</span>: { <span class="tok-str">'Content-Type'</span>: <span class="tok-str">'application/json'</span> },
+  <span class="tok-prop">body</span>: <span class="tok-fn">JSON.stringify</span>({
     <span class="tok-prop">grant_type</span>:    <span class="tok-str">'refresh_token'</span>,
-    <span class="tok-prop">refresh_token</span>: storedRefreshToken,
+    <span class="tok-prop">refresh_token</span>: 'stored_Refresh_Token',
     <span class="tok-prop">client_id</span>:     <span class="tok-str">'YOUR_CLIENT_ID'</span>,
     <span class="tok-prop">client_secret</span>: <span class="tok-str">'YOUR_CLIENT_SECRET'</span>,
   })
 });
-<span class="tok-kw">const</span> { accessToken, refreshToken , tokenType: "Bearer"} = <span class="tok-kw">await</span> response.<span class="tok-fn">json</span>();
-<span class="tok-cmt">// store new refresh_token — old one is now invalid</span></pre>
+
+<span class="tok-kw">const</span> result = <span class="tok-kw">await</span> response.<span class="tok-fn">json</span>();
+<span class="tok-kw">const</span> { accessToken, refreshToken, tokenType: "Bearer"} = result?.<span class="tok-fn">data</span>;
+<span class="tok-cmt">// store new refresh_token — old one is now invalid</span>
+</pre>
           </div>
 
           <!-- <h3 class="doc-h3">Verify JWT (ID Token / Access Token)</h3>

@@ -152,7 +152,10 @@ export const registerApplication = asyncHandler(async (req, res)=>{
     owner: req?.user?.id,
   })
 
-  // step:4 - return clientId and clientSecret to the application owner
+  // step:4 - also add url in redis for cors whitelisting
+  await redis.sadd("allowed_origins", url);
+
+  // step:5 - return clientId and clientSecret to the application owner
   ApiResponse.created(res, "application registered successfully", {clientId, clientSecret});
 })
 
