@@ -362,14 +362,17 @@ export const getOrRenewClientAccessAndRefreshToken = asyncHandler(async(req, res
   const payload = buildAccessTokenPayload(user, app.clientId);
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken({sub: user._id});
-
-  // step:7 - store hased refreshToken of client user in db
   const hashedRefreshToken = makeDataHash(refreshToken);
-  await clientTokenModel.create({
-    refreshToken: hashedRefreshToken,
-    application: app._id,
-    user: user._id,
-  })
+
+  // step:7 - find oldRefreshToken in the DB if found then update it with newRefreshToken; and If not found then create a new record of client_user RefreshToken
+  await clientTokenModel.findOneAndUpdate(
+    {user: user._id, application: app._id},
+    {refreshToken: hashedRefreshToken},
+    {
+      upsert: true, //Record mila → update karega || Record nahi mila → naya create karega
+      new: true,
+    }
+  );
 
   ApiResponse.ok(res, "tokens generated successfully", {accessToken, refreshToken, tokenType: "Bearer"});
 
